@@ -33,9 +33,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import Teamcode
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 /**
@@ -56,6 +59,9 @@ import com.qualcomm.robotcore.util.Range;
 public class MecanumTank extends LinearOpMode {
 
     // Declare OpMode members.
+    HardwareMap robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+
+    /*
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -66,6 +72,8 @@ public class MecanumTank extends LinearOpMode {
     private DcMotor hopperAim;
     private DcMotor wobbleLift;
     private Servo wobbleClamp;
+
+     */
 
     @Override
     public void runOpMode() {
