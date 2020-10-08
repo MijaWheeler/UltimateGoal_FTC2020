@@ -52,16 +52,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareMap
 {
     /* Public OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive;
-    private DcMotor frontRightDrive;
-    private DcMotor backLeftDrive;
-    private DcMotor backRightDrive;
-    private DcMotor intake;
-    private DcMotor shooter;
-    private DcMotor hopperAim;
-    private DcMotor wobbleLift;
-    private Servo wobbleClamp;
+    //public ElapsedTime runtime = new ElapsedTime();
+    public DcMotor frontLeftDrive;
+    public DcMotor frontRightDrive;
+    public DcMotor backLeftDrive;
+    public DcMotor backRightDrive;
+    public DcMotor intake;
+    public DcMotor shooter;
+    public DcMotor hopperAim;
+    public DcMotor wobbleLift;
+    public Servo wobbleClamp;
 
     //public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
@@ -69,10 +69,11 @@ public class HardwareMap
 
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    //public ElapsedTime runtime  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareMap(){
+    public HardwareMap()
+    {
 
     }
 

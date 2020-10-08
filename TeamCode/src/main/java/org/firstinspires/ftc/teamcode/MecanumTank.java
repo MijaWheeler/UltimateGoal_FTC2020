@@ -33,12 +33,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import Teamcode
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 /**
@@ -59,10 +57,10 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class MecanumTank extends LinearOpMode {
 
     // Declare OpMode members.
-    HardwareMap robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
     /*
-    private ElapsedTime runtime = new ElapsedTime();
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
     private DcMotor backLeftDrive;
@@ -72,14 +70,19 @@ public class MecanumTank extends LinearOpMode {
     private DcMotor hopperAim;
     private DcMotor wobbleLift;
     private Servo wobbleClamp;
-
      */
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.init(hardwareMap);
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
+
+        /*
         // Setup motors
         frontLeftDrive  = hardwareMap.dcMotor.get("front_left_drive");
         frontRightDrive = hardwareMap.dcMotor.get("front_right_drive");
@@ -100,9 +103,8 @@ public class MecanumTank extends LinearOpMode {
 
         //claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
+*/
+
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -117,15 +119,15 @@ public class MecanumTank extends LinearOpMode {
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
             //Initial Motor Speeds
-            frontLeftDrive.setPower(fld);
-            frontRightDrive.setPower(frd);
-            backLeftDrive.setPower(bld);
-            backRightDrive.setPower(brd);
+            robot.frontLeftDrive.setPower(fld);
+            robot.frontRightDrive.setPower(frd);
+            robot.backLeftDrive.setPower(bld);
+            robot.backRightDrive.setPower(brd);
 
-            intake.setPower(0.0);
-            shooter.setPower(0.0);
-            hopperAim.setPower(0.0);
-            wobbleLift.setPower(0.0);
+            robot.intake.setPower(0.0);
+            robot.shooter.setPower(0.0);
+            robot.hopperAim.setPower(0.0);
+            robot.wobbleLift.setPower(0.0);
             //wobbleClamp.servoSet
             //Blah... look up how to set servo power
 
@@ -151,27 +153,27 @@ public class MecanumTank extends LinearOpMode {
            else
                lift.setPower(0.0);
 
-       /*
+       */
        //Strafing
        if (gamepad1.right_bumper) { //right
-           frontLeftDrive.setPower(-1);
-           frontRightDrive.setPower(1);
-           backLeftDrive.setPower(1);
-           backRightDrive.setPower(-1);
+           robot.frontLeftDrive.setPower(-1);
+           robot.frontRightDrive.setPower(1);
+           robot.backLeftDrive.setPower(1);
+           robot.backRightDrive.setPower(-1);
        }
        else if (gamepad1.left_bumper) { //left
-           frontLeftDrive.setPower(1);
-           frontRightDrive.setPower(-1);
-           backLeftDrive.setPower(-1);
-           backRightDrive.setPower(1);
+           robot.frontLeftDrive.setPower(1);
+           robot.frontRightDrive.setPower(-1);
+           robot.backLeftDrive.setPower(-1);
+           robot.backRightDrive.setPower(1);
        }
        else {
-           frontLeftDrive.setPower(fld);
-           frontRightDrive.setPower(frd);
-           backLeftDrive.setPower(bld);
-           backRightDrive.setPower(brd);
+           robot.frontLeftDrive.setPower(fld);
+           robot.frontRightDrive.setPower(frd);
+           robot.backLeftDrive.setPower(bld);
+           robot.backRightDrive.setPower(brd);
        }
-           */
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
