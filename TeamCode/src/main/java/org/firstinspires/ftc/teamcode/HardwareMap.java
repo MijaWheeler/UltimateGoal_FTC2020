@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -62,6 +64,7 @@ public class HardwareMap
     public DcMotor hopperAim;
     public DcMotor wobbleLift;
     public Servo wobbleClamp;
+    public DistanceSensor sensorRange;
 
     //public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
@@ -92,6 +95,7 @@ public class HardwareMap
         hopperAim       = hwMap.get(DcMotor.class,"Intake");
         wobbleLift      = hwMap.get(DcMotor.class,"Shooter");
         wobbleClamp     = hwMap.get(Servo.class, "Wobble Clamp Servo");
+        sensorRange     = hwMap.get(DistanceSensor.class, "sensor_range");
 
 
         //Set motor direction
