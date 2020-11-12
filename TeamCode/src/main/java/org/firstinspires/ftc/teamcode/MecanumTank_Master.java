@@ -27,16 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
 
 
 /**
@@ -52,25 +49,14 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-//@Disabled
-public class MecanumTank extends LinearOpMode {
+@TeleOp(name="Tank Drive: Master", group="TeleOp")
+@Disabled
+public class MecanumTank_Master extends LinearOpMode {
 
     // Declare OpMode members.
     HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
-    /*
-    private DcMotor frontLeftDrive;
-    private DcMotor frontRightDrive;
-    private DcMotor backLeftDrive;
-    private DcMotor backRightDrive;
-    private DcMotor intake;
-    private DcMotor shooter;
-    private DcMotor hopperAim;
-    private DcMotor wobbleLift;
-    private Servo wobbleClamp;
-     */
 
     @Override
     public void runOpMode() {
@@ -82,28 +68,6 @@ public class MecanumTank extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        /*
-        // Setup motors
-        frontLeftDrive  = hardwareMap.dcMotor.get("front_left_drive");
-        frontRightDrive = hardwareMap.dcMotor.get("front_right_drive");
-        backLeftDrive   = hardwareMap.dcMotor.get("back_left_drive");
-        backRightDrive  = hardwareMap.dcMotor.get("back_right_drive");
-        intake          = hardwareMap.dcMotor.get("Intake");
-        shooter         = hardwareMap.dcMotor.get("Shooter");
-        hopperAim       = hardwareMap.dcMotor.get("Intake");
-        wobbleLift      = hardwareMap.dcMotor.get("Shooter");
-        wobbleClamp     = hardwareMap.servo.get("Wobble Clamp Servo");
-
-
-        //Disable encoders
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-*/
 
 
         // run until the end of the match (driver presses STOP)
@@ -113,14 +77,17 @@ public class MecanumTank extends LinearOpMode {
             double magnitudeRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-            final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
-            final double frd = magnitudeRight * Math.cos(robotAngleRight);
+            //final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
+            //final double frd = magnitudeRight * Math.cos(robotAngleRight);
             final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
+
+
+
             //Initial Motor Speeds
-            robot.frontLeftDrive.setPower(fld);
-            robot.frontRightDrive.setPower(frd);
+            //robot.frontLeftDrive.setPower(fld);
+            //robot.frontRightDrive.setPower(frd);
             robot.backLeftDrive.setPower(bld);
             robot.backRightDrive.setPower(brd);
 
@@ -131,45 +98,45 @@ public class MecanumTank extends LinearOpMode {
             //wobbleClamp.servoSet
             //Blah... look up how to set servo power
 
-           /*
-           //Claw Controls
-           double clawSpeed = 0.5;
+
+           //Intake Controls= trigger
+           double intakeSpeed = 0.5;
            if (gamepad1.left_trigger >= 0.5)
-               claw.setPower(clawSpeed);
+               robot.intake.setPower(intakeSpeed);
 
            else if (gamepad1.right_trigger >= 0.5)
-               claw.setPower(-clawSpeed);
+               robot.intake.setPower(-intakeSpeed);
 
            else
-               claw.setPower(0.0);
+               robot.intake.setPower(0.0);
 
 
-           //Lift Controls
-           double liftSpeed = 1;
+           //Lift Controls = bumper
+           double liftSpeed = 0.5;
            if (gamepad1.right_bumper)
-               lift.setPower(liftSpeed);
+               robot.wobbleLift.setPower(liftSpeed);
            else if (gamepad1.left_bumper)
-               lift.setPower(-liftSpeed);
+               robot.wobbleLift.setPower(-liftSpeed);
            else
-               lift.setPower(0.0);
+               robot.wobbleLift.setPower(0.0);
 
-       */
+
        //Strafing
        if (gamepad1.right_bumper) { //right
-           robot.frontLeftDrive.setPower(-1);
-           robot.frontRightDrive.setPower(1);
+          // robot.frontLeftDrive.setPower(-1);
+          // robot.frontRightDrive.setPower(1);
            robot.backLeftDrive.setPower(1);
            robot.backRightDrive.setPower(-1);
        }
        else if (gamepad1.left_bumper) { //left
-           robot.frontLeftDrive.setPower(1);
-           robot.frontRightDrive.setPower(-1);
+         //  robot.frontLeftDrive.setPower(1);
+         //  robot.frontRightDrive.setPower(-1);
            robot.backLeftDrive.setPower(-1);
            robot.backRightDrive.setPower(1);
        }
        else {
-           robot.frontLeftDrive.setPower(fld);
-           robot.frontRightDrive.setPower(frd);
+          // robot.frontLeftDrive.setPower(fld);
+          // robot.frontRightDrive.setPower(frd);
            robot.backLeftDrive.setPower(bld);
            robot.backRightDrive.setPower(brd);
        }

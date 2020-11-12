@@ -27,14 +27,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
 
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
@@ -50,65 +51,100 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+@TeleOp(name="Tank Drive: One Hub" + "", group="TeleOp")
+
+///@Disabled
+public class MecanumTank_OneHub extends LinearOpMode {
 
     // Declare OpMode members.
+    HardwareMap_Drive robot       = new HardwareMap_Drive(); // use the class created to define a Pushbot's hardware
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
+
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+            double magnitudeLeft = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            double magnitudeRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
+            double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
+            final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
+            final double frd = magnitudeRight * Math.cos(robotAngleRight);
+            final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
+            final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+            //Initial Motor Speeds
+            robot.frontLeftDrive.setPower(fld);
+            robot.frontRightDrive.setPower(frd);
+            robot.backLeftDrive.setPower(bld);
+            robot.backRightDrive.setPower(brd);
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            //Intake Controls= trigger
+            double intakeSpeed = 0;
+            if (gamepad1.left_trigger >= 0.5) {
+                //robot.intake.setPower(intakeSpeed);
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            }else if (gamepad1.right_trigger >= 0.5) {
+                //robot.intake.setPower(-intakeSpeed);
 
-            // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            } else {
+                //robot.intake.setPower(0.0);
+            }
+
+
+            //Lift Controls = bumper
+            double liftSpeed = 0.5;
+            if (gamepad1.right_bumper) {
+                //robot.wobbleLift.setPower(liftSpeed);
+            }else if (gamepad1.left_bumper) {
+                //robot.wobbleLift.setPower(-liftSpeed);
+            }else{
+                //robot.wobbleLift.setPower(0.0);
+            }
+
+
+            //Strafing
+            double driveSpeed = 1.0;
+            if (gamepad1.right_bumper) { //right
+                robot.frontLeftDrive.setPower(-driveSpeed);
+                robot.frontRightDrive.setPower(driveSpeed);
+                robot.backLeftDrive.setPower(driveSpeed);
+                robot.backRightDrive.setPower(-driveSpeed);
+            }
+            else if (gamepad1.left_bumper) { //left
+                robot.frontLeftDrive.setPower(driveSpeed);
+                robot.frontRightDrive.setPower(-driveSpeed);
+                robot.backLeftDrive.setPower(-driveSpeed);
+                robot.backRightDrive.setPower(driveSpeed);
+            }
+            else {
+                robot.frontLeftDrive.setPower(fld);
+                robot.frontRightDrive.setPower(frd);
+                robot.backLeftDrive.setPower(bld);
+                robot.backRightDrive.setPower(brd);
+            }
+
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("deviceName",robot.sensorRange.getDeviceName() );
+            telemetry.addData("range", String.format("%.01f mm", robot.sensorRange.getDistance(DistanceUnit.MM)));
+
             telemetry.update();
         }
     }
 }
+

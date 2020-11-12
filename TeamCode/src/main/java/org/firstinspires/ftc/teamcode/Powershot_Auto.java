@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 public class Powershot_Auto extends LinearOpMode {
     HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    private final ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -74,12 +74,12 @@ public class Powershot_Auto extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                         (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    private DcMotor frontLeft = robot.frontLeftDrive;
-    private DcMotor frontRight = robot.frontRightDrive;
-    private DcMotor backLeft = robot.backLeftDrive;
-    private DcMotor backRight = robot.backRightDrive;
-    private DcMotor shoot = robot.shooter;
-    private DcMotor hopper = robot.hopperAim;
+    private final DcMotor frontLeft = robot.frontLeftDrive;
+    private final DcMotor frontRight = robot.frontRightDrive;
+    private final DcMotor backLeft = robot.backLeftDrive;
+    private final DcMotor backRight = robot.backRightDrive;
+    private final DcMotor shoot = robot.shooter;
+    private final DcMotor hopper = robot.hopperAim;
 
     static final double     DRIVE_SPEED = 0.6;
     static final double     STRAFE_SPEED  =  0.5;

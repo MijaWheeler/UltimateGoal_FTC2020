@@ -65,11 +65,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Powershot Auto", group="Pushbot")
+@Autonomous(name = "Wobble Auto", group = "Auto")
 @Disabled
 public class Wobble_Auto extends LinearOpMode {
-    HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwareMap robot        = new HardwareMap(); // use the class created to define a Pushbot's hardware
+    private final ElapsedTime     runtime = new ElapsedTime();
     Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)robot.sensorRange;
 
 
@@ -79,21 +79,21 @@ public class Wobble_Auto extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                         (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    private DcMotor frontLeft = robot.frontLeftDrive;
-    private DcMotor frontRight = robot.frontRightDrive;
-    private DcMotor backLeft = robot.backLeftDrive;
-    private DcMotor backRight = robot.backRightDrive;
-    private DcMotor shoot = robot.shooter;
-    private DcMotor hopper = robot.hopperAim;
+    private final DcMotor frontLeft = robot.frontLeftDrive;
+    private final DcMotor frontRight = robot.frontRightDrive;
+    private final DcMotor backLeft = robot.backLeftDrive;
+    private final DcMotor backRight = robot.backRightDrive;
+    private final DcMotor shoot = robot.shooter;
+    private final DcMotor hopper = robot.hopperAim;
 
     static final double     DRIVE_SPEED = 0.6;
     static final double     STRAFE_SPEED  =  0.5;
     static final double     SHOOT_SPEED =  0.5;
     static final double     HOPPER_SPEED  =  0.5;
 
-    //Mounting height of 2m sensor in INCHES
-    static final double     snsrMount  =  6.5; //idk
-    double stackHeight = robot.sensorRange.getDistance(DistanceUnit.INCH) - snsrMount;
+    //Mounting height of 2m sensor in MM
+    static final double     snsrMount  =  101.6; //
+    double stackHeight = robot.sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
 
 
     @Override
@@ -121,14 +121,12 @@ public class Wobble_Auto extends LinearOpMode {
         waitForStart();
 
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  30,  30, 10.0);  // S1: Forward to Start Stack
         sleep(1000);     // pause for servos to move
         //getStackHeight idk //S2: Scan Stack to determine which target to go for
         sleep(1000);
 
-        if (stackHeight < 1.0 || stackHeight > 0.1) //1 ring = .75; Tar B
+        if (stackHeight <= 500 || stackHeight >= 350) //1 ring = .75; Tar B [350-500mm]
         {
             encoderDrive(DRIVE_SPEED, 96, 96, 10.0); // S3: Forward 96in
             sleep(1000);
@@ -137,7 +135,7 @@ public class Wobble_Auto extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, -24, -24, 10.0); // S5: Reverse 24in. Park
             sleep(1000);
         }
-        else if (stackHeight < 2.25 ) //4 ring = 3; Tar C
+        else if (stackHeight >= 800 ) //4 ring = 3; Tar C [800-1100mm]
         {
             encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
             sleep(1000);
@@ -150,8 +148,9 @@ public class Wobble_Auto extends LinearOpMode {
 
 
         }
-        else //0 ring = 0; Tar A
+        else //0 ring = 0; Tar A [0-200 mm]
         {
+
             encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
             sleep(1000);
             encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
@@ -166,6 +165,9 @@ public class Wobble_Auto extends LinearOpMode {
         telemetry.update();
     }
 
+
+
+
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
@@ -174,6 +176,19 @@ public class Wobble_Auto extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
+/*
+    public void positonA() {
+        stackHeight = this.stackHeight;
+        encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
+        sleep(1000);
+        encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
+        sleep(1000);
+        // S5: Drop woddle
+
+    }
+
+ */
+
     public void encoderDrive(double speed, double leftInches,
                              double rightInches, double timeoutS) {
         int newLeftTarget;
