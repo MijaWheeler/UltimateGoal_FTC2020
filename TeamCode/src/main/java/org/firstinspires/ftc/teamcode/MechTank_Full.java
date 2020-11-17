@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tank Drive: Master", group="TeleOp")
+@TeleOp(name="Tank Drive: Full", group="TeleOp")
 @Disabled
 public class MechTank_Full extends LinearOpMode {
 
@@ -93,7 +93,7 @@ public class MechTank_Full extends LinearOpMode {
 
             robot.intake.setPower(0.0);
             robot.shooter.setPower(0.0);
-            robot.hopperAim.setPower(0.0);
+            robot.hopper.setPower(0.0);
             robot.wobbleLift.setPower(0.0);
             //wobbleClamp.servoSet
             //Blah... look up how to set servo power

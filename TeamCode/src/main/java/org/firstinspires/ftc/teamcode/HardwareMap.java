@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -62,11 +63,17 @@ public class HardwareMap
     public DcMotor backRightDrive;
     public DcMotor intake;
     public DcMotor shooter;
-    public DcMotor hopperAim;
+    public DcMotor hopper;
     public DcMotor wobbleLift;
     public Servo wobbleClamp;
     public Servo loader;
     public DistanceSensor sensorRange;
+
+    //private Servo loader;
+
+    //public static final double loadOn   =  0.9 ;
+    public static final double loadOff    =  0.5 ;
+
 
     //public static final double MID_SERVO       =  0.5 ;
     //public static final double ARM_UP_POWER    =  0.45 ;
@@ -99,29 +106,37 @@ public class HardwareMap
         backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
         intake          = hwMap.get(DcMotor.class, "intake");
         shooter         = hwMap.get(DcMotor.class,"shooter");
-        hopperAim       = hwMap.get(DcMotor.class,"hopper");
-        wobbleClamp     = hwMap.get(Servo.class, "wobbleClamp");
+        hopper       = hwMap.get(DcMotor.class,"hopper");
+       // wobbleClamp     = hwMap.get(Servo.class, "wobbleClamp");
         loader          = hwMap.get(Servo.class, "loader");
         sensorRange     = hwMap.get(DistanceSensor.class, "sensor2M");
 
 
         //Set motor direction
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);// kinda sus
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        /*
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
+         */
+
         shooter.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //Set motor w/ & w/out encoders
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hopperAim.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hopper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         // Define and initialize ALL installed servos.

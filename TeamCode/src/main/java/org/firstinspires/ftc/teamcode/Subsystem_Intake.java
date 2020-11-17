@@ -30,6 +30,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Intake ", group="Subsystem")
-//@Disabled
+@Disabled
 public class Subsystem_Intake extends LinearOpMode {
 
     // Declare OpMode members.
@@ -86,14 +87,15 @@ public class Subsystem_Intake extends LinearOpMode {
 
             //Intake Controls= trigger
             double intakeSpeed = 0.5;
-            if (gamepad1.left_trigger >= 0.5)
+            if (gamepad1.left_trigger >= 0.5) {
                 intake.setPower(intakeSpeed);
 
-            else if (gamepad1.right_trigger >= 0.5)
+            }else if (gamepad1.right_trigger >= 0.5) {
                 intake.setPower(-intakeSpeed);
 
-            else
+            }else {
                 intake.setPower(0.0);
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

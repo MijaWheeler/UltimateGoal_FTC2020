@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Tank Drive ", group="Subsystem")
-//@Disabled
+@Disabled
 public class Subsystem_Tank extends LinearOpMode {
 
     // Declare OpMode members.

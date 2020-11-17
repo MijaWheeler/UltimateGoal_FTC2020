@@ -81,7 +81,7 @@ public class Park_Auto extends LinearOpMode {
     private final DcMotor backLeft = robot.backLeftDrive;
     private final DcMotor backRight = robot.backRightDrive;
     private final DcMotor shoot = robot.shooter;
-    private final DcMotor hopper = robot.hopperAim;
+    private final DcMotor hopper = robot.hopper;
 
     static final double     DRIVE_SPEED = 0.6;
     static final double     STRAFE_SPEED  =  0.5;

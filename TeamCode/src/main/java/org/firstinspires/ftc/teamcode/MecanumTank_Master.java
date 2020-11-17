@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Tank Drive: Master", group="TeleOp")
-@Disabled
+//@Disabled
 public class MecanumTank_Master extends LinearOpMode {
 
     // Declare OpMode members.
@@ -77,8 +77,8 @@ public class MecanumTank_Master extends LinearOpMode {
             double magnitudeRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-            //final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
-            //final double frd = magnitudeRight * Math.cos(robotAngleRight);
+            final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
+            final double frd = magnitudeRight * Math.cos(robotAngleRight);
             final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
@@ -86,57 +86,78 @@ public class MecanumTank_Master extends LinearOpMode {
 
 
             //Initial Motor Speeds
-            //robot.frontLeftDrive.setPower(fld);
-            //robot.frontRightDrive.setPower(frd);
+            robot.frontLeftDrive.setPower(fld);
+            robot.frontRightDrive.setPower(frd);
             robot.backLeftDrive.setPower(bld);
             robot.backRightDrive.setPower(brd);
 
             robot.intake.setPower(0.0);
             robot.shooter.setPower(0.0);
-            robot.hopperAim.setPower(0.0);
+            robot.hopper.setPower(0.0);
             robot.wobbleLift.setPower(0.0);
             //wobbleClamp.servoSet
             //Blah... look up how to set servo power
 
 
-           //Intake Controls= trigger
-           double intakeSpeed = 0.5;
-           if (gamepad1.left_trigger >= 0.5)
-               robot.intake.setPower(intakeSpeed);
 
-           else if (gamepad1.right_trigger >= 0.5)
-               robot.intake.setPower(-intakeSpeed);
+            //Shooter = bumper2 [2]
+            double shootSpeed = 1.0;
+            if (gamepad2.right_bumper) {
+                robot.shooter.setPower(shootSpeed);
+            } else if (gamepad2.left_bumper) {
+                robot.shooter.setPower(-shootSpeed);
+            } else {
+                robot.shooter.setPower(0.0);
+            }
 
-           else
-               robot.intake.setPower(0.0);
+            //Loader servo. Button [2]
+            if (gamepad1.x) {
+                robot.loader.setPosition(robot.loadOff);
+            } else {
+                robot.loader.setPosition(0);
+            }
 
+            //Lift [Trigger 2]
+            double hopperSpeed = 1;
+            if (gamepad2.left_trigger >= 0.5) {
+                robot.hopper.setPower(hopperSpeed);
 
-           //Lift Controls = bumper
-           double liftSpeed = 0.5;
-           if (gamepad1.right_bumper)
-               robot.wobbleLift.setPower(liftSpeed);
-           else if (gamepad1.left_bumper)
-               robot.wobbleLift.setPower(-liftSpeed);
-           else
-               robot.wobbleLift.setPower(0.0);
+            } else if (gamepad2.right_trigger >= 0.5) {
+                robot.hopper.setPower(-hopperSpeed);
 
+            }else {
+                robot.hopper.setPower(0.0);
+            }
+
+            //Intake Controls= trigger [1]
+            double intakeSpeed = 1;
+            if (gamepad1.left_trigger >= 0.5) {
+                robot.intake.setPower(intakeSpeed);
+
+            }else if (gamepad1.right_trigger >= 0.5) {
+                robot.intake.setPower(-intakeSpeed);
+
+            }else {
+                robot.intake.setPower(0.0);
+            }
 
        //Strafing
+            double strafeSpeed = 1;
        if (gamepad1.right_bumper) { //right
-          // robot.frontLeftDrive.setPower(-1);
-          // robot.frontRightDrive.setPower(1);
-           robot.backLeftDrive.setPower(1);
-           robot.backRightDrive.setPower(-1);
+           robot.frontLeftDrive.setPower(-strafeSpeed);
+           robot.frontRightDrive.setPower(strafeSpeed);
+           robot.backLeftDrive.setPower(strafeSpeed);
+           robot.backRightDrive.setPower(-strafeSpeed);
        }
        else if (gamepad1.left_bumper) { //left
-         //  robot.frontLeftDrive.setPower(1);
-         //  robot.frontRightDrive.setPower(-1);
-           robot.backLeftDrive.setPower(-1);
-           robot.backRightDrive.setPower(1);
+           robot.frontLeftDrive.setPower(strafeSpeed);
+           robot.frontRightDrive.setPower(-strafeSpeed);
+           robot.backLeftDrive.setPower(-strafeSpeed);
+           robot.backRightDrive.setPower(strafeSpeed);
        }
        else {
-          // robot.frontLeftDrive.setPower(fld);
-          // robot.frontRightDrive.setPower(frd);
+           robot.frontLeftDrive.setPower(fld);
+           robot.frontRightDrive.setPower(frd);
            robot.backLeftDrive.setPower(bld);
            robot.backRightDrive.setPower(brd);
        }
