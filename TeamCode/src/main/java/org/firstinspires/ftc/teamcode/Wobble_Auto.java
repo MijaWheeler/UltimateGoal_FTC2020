@@ -65,11 +65,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Wobble Auto", group = "Auto")
-@Disabled
+@Autonomous(name = "Wobble Auto", group = "Test")
+//@Disabled
 public class Wobble_Auto extends LinearOpMode {
-    HardwareMap robot        = new HardwareMap(); // use the class created to define a Pushbot's hardware
+    private Map_Auto_Tank robot        = new Map_Auto_Tank(); // use the class created to define a Pushbot's hardware
     private final ElapsedTime     runtime = new ElapsedTime();
+
+    /*
     Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)robot.sensorRange;
 
 
@@ -94,6 +96,13 @@ public class Wobble_Auto extends LinearOpMode {
     //Mounting height of 2m sensor in MM
     static final double     snsrMount  =  101.6; //
     double stackHeight = robot.sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
+
+
+     */
+    private final DcMotor frontLeft = robot.frontLeftDrive;
+    private final DcMotor frontRight = robot.frontRightDrive;
+    private final DcMotor backLeft = robot.backLeftDrive;
+    private final DcMotor backRight = robot.backRightDrive;
 
 
     @Override
@@ -121,29 +130,29 @@ public class Wobble_Auto extends LinearOpMode {
         waitForStart();
 
 
-        encoderDrive(DRIVE_SPEED,  30,  30, 10.0);  // S1: Forward to Start Stack
+        encoderDrive(robot.DRIVE_SPEED,  30,  30, 10.0);  // S1: Forward to Start Stack
         sleep(1000);     // pause for servos to move
         //getStackHeight idk //S2: Scan Stack to determine which target to go for
         sleep(1000);
 
-        if (stackHeight <= 500 || stackHeight >= 350) //1 ring = .75; Tar B [350-500mm]
+        if (robot.stackHeight <= 500 || robot.stackHeight >= 350) //1 ring = .75; Tar B [350-500mm]
         {
-            encoderDrive(DRIVE_SPEED, 96, 96, 10.0); // S3: Forward 96in
+            encoderDrive(robot.DRIVE_SPEED, 96, 96, 10.0); // S3: Forward 96in
             sleep(1000);
             //S4: Drop Woddle
             sleep(1000);
-            encoderDrive(DRIVE_SPEED, -24, -24, 10.0); // S5: Reverse 24in. Park
+            encoderDrive(robot.DRIVE_SPEED, -24, -24, 10.0); // S5: Reverse 24in. Park
             sleep(1000);
         }
-        else if (stackHeight >= 800 ) //4 ring = 3; Tar C [800-1100mm]
+        else if (robot.stackHeight >= 800 ) //4 ring = 3; Tar C [800-1100mm]
         {
-            encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
+            encoderDrive(robot.DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
             sleep(1000);
-            encoderDrive(DRIVE_SPEED, 96, 96, 10.0); // S4: Forward 96in
+            encoderDrive(robot.DRIVE_SPEED, 96, 96, 10.0); // S4: Forward 96in
             sleep(1000);
             // S5: Drop woddle
             sleep(1000);
-            encoderDrive(DRIVE_SPEED, -60, -60, 10.0); // S6: Backward 60. Park
+            encoderDrive(robot.DRIVE_SPEED, -60, -60, 10.0); // S6: Backward 60. Park
             sleep(1000);
 
 
@@ -151,9 +160,9 @@ public class Wobble_Auto extends LinearOpMode {
         else //0 ring = 0; Tar A [0-200 mm]
         {
 
-            encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
+            encoderDrive(robot.DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
             sleep(1000);
-            encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
+            encoderDrive(robot.DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
             sleep(1000);
             // S5: Drop woddle
 
@@ -198,8 +207,8 @@ public class Wobble_Auto extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = frontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = frontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = frontLeft.getCurrentPosition() + (int)(leftInches * robot.COUNTS_PER_INCH);
+            newRightTarget = frontRight.getCurrentPosition() + (int)(rightInches * robot.COUNTS_PER_INCH);
             frontLeft.setTargetPosition(newLeftTarget);
             frontRight.setTargetPosition(newRightTarget);
 

@@ -53,17 +53,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Intake", group="Subsystem")
-@Disabled
+@TeleOp(name="Shooter + Servo", group="Subsystem")
+//@Disabled
 public class Subsystem_Shooter extends LinearOpMode {
 
     // Declare OpMode members.
+    Map_Shooter robot = new Map_Shooter();
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor shooter;
-    private Servo loader;
-
-    public static final double loadOn   =  0.5 ;
-    public static final double loadOff    =  -0.45 ;
 
 
     @Override
@@ -71,16 +67,7 @@ public class Subsystem_Shooter extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        shooter  = hardwareMap.get(DcMotor.class,"shooter");
-
-        //Set motor direction
-        //frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        shooter.setDirection(DcMotor.Direction.FORWARD);
-
-
-        //Set encoder
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        //shooter  = hardwareMap.get(DcMotor.class,"shooter");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -90,26 +77,24 @@ public class Subsystem_Shooter extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Initial Motor Speeds
-            shooter.setPower(0.0);
+            robot.shooter.setPower(0.0);
 
-            //Shooter = bumper2
-            double shootSpeed = 0.5;
+            //Shooter = bumper2 [2]
+            double shootSpeed = 1.0;
             if (gamepad2.right_bumper) {
-                shooter.setPower(shootSpeed);
+                robot.shooter.setPower(shootSpeed);
             } else if (gamepad2.left_bumper) {
-                shooter.setPower(-shootSpeed);
+                robot.shooter.setPower(-shootSpeed);
             } else {
-                shooter.setPower(0.0);
+                robot.shooter.setPower(0.0);
             }
 
-            if (gamepad2.y) {
-                loader.setPosition(loadOn);
-            } else if (gamepad1.a) {
-                loader.setPosition(loadOff);
-            }else {
-                loader.setPosition(0.0);
+            //Loader servo. Button [2]
+            if (gamepad2.a) {
+                robot.loader.setPosition(robot.loadOff);
+            } else {
+                robot.loader.setPosition(0);
             }
-
 
 
             // Show the elapsed game time and wheel power.

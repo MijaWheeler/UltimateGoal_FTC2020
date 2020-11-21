@@ -30,10 +30,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -50,43 +48,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tank Drive ", group="Subsystem")
-@Disabled
+@TeleOp(name="Tank Drive ONLY", group="Subsystem")
+//@Disabled
 public class Subsystem_Tank extends LinearOpMode {
 
     // Declare OpMode members.
+    //HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
+    Map_Tank robot = new Map_Tank();
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor frontLeftDrive;
-    private DcMotor frontRightDrive;
-    private DcMotor backLeftDrive;
-    private DcMotor backRightDrive;
 
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        frontLeftDrive  = hardwareMap.get(DcMotor.class,"frontLeftDrive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
-        backLeftDrive   = hardwareMap.get(DcMotor.class,"backLeftDrive");
-        backRightDrive  = hardwareMap.get(DcMotor.class, "backRightDrive");
-
-        //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        //Set encoder
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -101,31 +83,32 @@ public class Subsystem_Tank extends LinearOpMode {
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
             //Initial Motor Speeds
-            frontLeftDrive.setPower(fld);
-            frontRightDrive.setPower(frd);
-            backLeftDrive.setPower(bld);
-            backRightDrive.setPower(brd);
+            robot.frontLeftDrive.setPower(fld);
+            robot.frontRightDrive.setPower(frd);
+            robot.backLeftDrive.setPower(bld);
+            robot.backRightDrive.setPower(brd);
 
             //Strafing
-            double driveSpeed = 1;
-           if (gamepad1.right_bumper) { //right
-               frontLeftDrive.setPower(-driveSpeed);
-               frontRightDrive.setPower(driveSpeed);
-               backLeftDrive.setPower(driveSpeed);
-               backRightDrive.setPower(-driveSpeed);
-           }
-           else if (gamepad1.left_bumper) { //left
-               frontLeftDrive.setPower(driveSpeed);
-               frontRightDrive.setPower(-driveSpeed);
-               backLeftDrive.setPower(-driveSpeed);
-               backRightDrive.setPower(driveSpeed);
-           }
-           else {
-               frontLeftDrive.setPower(fld);
-               frontRightDrive.setPower(frd);
-               backLeftDrive.setPower(bld);
-               backRightDrive.setPower(brd);
-           }
+            double strafeSpeed = 1;
+            if (gamepad1.right_bumper) { //right
+                robot.frontLeftDrive.setPower(-strafeSpeed);
+                robot.frontRightDrive.setPower(strafeSpeed);
+                robot.backLeftDrive.setPower(strafeSpeed);
+                robot.backRightDrive.setPower(-strafeSpeed);
+            }
+            else if (gamepad1.left_bumper) { //left
+                robot.frontLeftDrive.setPower(strafeSpeed);
+                robot.frontRightDrive.setPower(-strafeSpeed);
+                robot.backLeftDrive.setPower(-strafeSpeed);
+                robot.backRightDrive.setPower(strafeSpeed);
+            }
+            else {
+                robot.frontLeftDrive.setPower(fld);
+                robot.frontRightDrive.setPower(frd);
+                robot.backLeftDrive.setPower(bld);
+                robot.backRightDrive.setPower(brd);
+            }
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

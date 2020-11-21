@@ -35,8 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -51,13 +49,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tank Drive: One Hub" + "", group="TeleOp")
-
-@Disabled
-public class MecanumTank_OneHub extends LinearOpMode {
+@TeleOp(name="Lift", group="Subsystem")
+//@Disabled
+public class Subsystem_Lift extends LinearOpMode {
 
     // Declare OpMode members.
-    HardwareMap_Drive robot       = new HardwareMap_Drive(); // use the class created to define a Pushbot's hardware
+    Map_Lift robot = new Map_Lift();
     private final ElapsedTime runtime = new ElapsedTime();
 
 
@@ -71,78 +68,24 @@ public class MecanumTank_OneHub extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        //Lift [Trigger 2]
+        double hopperSpeed = 1;
+        if (gamepad2.left_trigger >= 0.5) {
+            robot.lift.setPower(hopperSpeed);
 
+        } else if (gamepad2.right_trigger >= 0.5) {
+            robot.lift.setPower(-hopperSpeed);
+
+        }else {
+            robot.lift.setPower(0.0);
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double magnitudeLeft = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double magnitudeRight = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-            double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
-            final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
-            final double frd = magnitudeRight * Math.cos(robotAngleRight);
-            final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
-            final double brd = magnitudeRight * Math.sin(robotAngleRight);
-
-            //Initial Motor Speeds
-            robot.frontLeftDrive.setPower(fld);
-            robot.frontRightDrive.setPower(frd);
-            robot.backLeftDrive.setPower(bld);
-            robot.backRightDrive.setPower(brd);
-
-            //Intake Controls= trigger
-            double intakeSpeed = 0;
-            if (gamepad1.left_trigger >= 0.5) {
-                //robot.intake.setPower(intakeSpeed);
-
-            }else if (gamepad1.right_trigger >= 0.5) {
-                //robot.intake.setPower(-intakeSpeed);
-
-            } else {
-                //robot.intake.setPower(0.0);
-            }
-
-
-            //Lift Controls = bumper
-            double liftSpeed = 0.5;
-            if (gamepad1.right_bumper) {
-                //robot.wobbleLift.setPower(liftSpeed);
-            }else if (gamepad1.left_bumper) {
-                //robot.wobbleLift.setPower(-liftSpeed);
-            }else{
-                //robot.wobbleLift.setPower(0.0);
-            }
-
-
-            //Strafing
-            double driveSpeed = 1.0;
-            if (gamepad1.right_bumper) { //right
-                robot.frontLeftDrive.setPower(-driveSpeed);
-                robot.frontRightDrive.setPower(driveSpeed);
-                robot.backLeftDrive.setPower(driveSpeed);
-                robot.backRightDrive.setPower(-driveSpeed);
-            }
-            else if (gamepad1.left_bumper) { //left
-                robot.frontLeftDrive.setPower(driveSpeed);
-                robot.frontRightDrive.setPower(-driveSpeed);
-                robot.backLeftDrive.setPower(-driveSpeed);
-                robot.backRightDrive.setPower(driveSpeed);
-            }
-            else {
-                robot.frontLeftDrive.setPower(fld);
-                robot.frontRightDrive.setPower(frd);
-                robot.backLeftDrive.setPower(bld);
-                robot.backRightDrive.setPower(brd);
-            }
-
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("deviceName",robot.sensorRange.getDeviceName() );
-            telemetry.addData("range", String.format("%.01f mm", robot.sensorRange.getDistance(DistanceUnit.MM)));
-
             telemetry.update();
         }
     }

@@ -30,10 +30,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -50,52 +48,41 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Intake ", group="Subsystem")
-@Disabled
+@TeleOp(name="Intake", group="Subsystem")
+//@Disabled
 public class Subsystem_Intake extends LinearOpMode {
 
     // Declare OpMode members.
+    Map_Intake robot = new Map_Intake();
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor intake;
 
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        intake  = hardwareMap.get(DcMotor.class,"intake");
-
-        //Set motor direction
-        //frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-
-
-        //Set encoder
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
+
+        //Intake Controls= trigger
+        double intakeSpeed = 0.5;
+        if (gamepad1.left_trigger >= 0.5)
+            robot.intake.setPower(intakeSpeed);
+
+        else if (gamepad1.right_trigger >= 0.5)
+            robot.intake.setPower(-intakeSpeed);
+
+        else
+            robot.intake.setPower(0.0);
+
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //Initial Motor Speeds
-            intake.setPower(0.0);
-
-            //Intake Controls= trigger
-            double intakeSpeed = 0.5;
-            if (gamepad1.left_trigger >= 0.5) {
-                intake.setPower(intakeSpeed);
-
-            }else if (gamepad1.right_trigger >= 0.5) {
-                intake.setPower(-intakeSpeed);
-
-            }else {
-                intake.setPower(0.0);
-            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

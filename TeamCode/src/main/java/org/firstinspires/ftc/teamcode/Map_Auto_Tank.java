@@ -29,9 +29,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 
 /**
  * This is NOT an opmode.
@@ -49,7 +52,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwareMap_Drive
+public class Map_Auto_Tank
 {
     /* Public OpMode members. */
     //public ElapsedTime runtime = new ElapsedTime();
@@ -60,13 +63,33 @@ public class HardwareMap_Drive
     public DcMotor backRightDrive;
     public DistanceSensor sensorRange;
 
+    Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+
+
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    //SPEED
+    static final double     DRIVE_SPEED = 0.6;
+
+    //Mounting height of 2m sensor in MM
+    static final double     snsrMount  =  101.6; //
+    double stackHeight = sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
+
+
+
+
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap           =  null;
     //public ElapsedTime runtime  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareMap_Drive()
+    public Map_Auto_Tank()
     {
+
 
     }
 
@@ -75,29 +98,41 @@ public class HardwareMap_Drive
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define & Initialize Motors
+
         frontLeftDrive  = hwMap.get(DcMotor.class,"frontLeftDrive");
         frontRightDrive = hwMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive   = hwMap.get(DcMotor.class,"backLeftDrive");
         backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
-        sensorRange     = hwMap.get(DistanceSensor.class, "sensor2M");
 
 
         //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);// kinda sus
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
+
+
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //Set motor w/ & w/out encoders
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+
+
+
+        //Initial Motor Speeds
+        frontLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        backRightDrive.setPower(0);
 
     }
+
+
  }
 

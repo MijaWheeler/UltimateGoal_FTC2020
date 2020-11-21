@@ -30,11 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 /**
  * This is NOT an opmode.
@@ -52,87 +48,37 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class HardwareMap
+public class Map_Lift
 {
     /* Public OpMode members. */
-    //public ElapsedTime runtime = new ElapsedTime();
-
-    public DcMotor frontLeftDrive;
-    public DcMotor frontRightDrive;
-    public DcMotor backLeftDrive;
-    public DcMotor backRightDrive;
-    public DcMotor intake;
-    public DcMotor shooter;
-    public DcMotor hopper;
-    public DcMotor wobbleLift;
-    public Servo wobbleClamp;
-    public Servo loader;
-    public DistanceSensor sensorRange;
-
-    //private Servo loader;
-
-    public static final double loadOff    =  0.5 ;
-
+    public DcMotor lift;
 
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap           =  null;
-    //public ElapsedTime runtime  = new ElapsedTime();
 
     /* Constructor */
-    public HardwareMap()
+    public Map_Lift()
     {
-
     }
 
     /* Initialize standard Hardware interfaces */
     public void init(com.qualcomm.robotcore.hardware.HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
-        // Define & Initialize Motors
-        wobbleLift      = hwMap.get(DcMotor.class,"lift");
-
-
-        frontLeftDrive  = hwMap.get(DcMotor.class,"frontLeftDrive");
-        frontRightDrive = hwMap.get(DcMotor.class, "frontRightDrive");
-        backLeftDrive   = hwMap.get(DcMotor.class,"backLeftDrive");
-        backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
-        intake          = hwMap.get(DcMotor.class, "intake");
-        shooter         = hwMap.get(DcMotor.class,"shooter");
-        hopper          = hwMap.get(DcMotor.class,"hopper");
-       // wobbleClamp     = hwMap.get(Servo.class, "wobbleClamp");
-        loader          = hwMap.get(Servo.class, "loader");
-        sensorRange     = hwMap.get(DistanceSensor.class, "sensor2M");
-
+        lift  = hwMap.get(DcMotor.class,"hopper");
 
         //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);// kinda sus
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        shooter.setDirection(DcMotor.Direction.REVERSE);
-
-        /*
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-         */
-
+        lift.setDirection(DcMotor.Direction.FORWARD);
 
         //Set motor w/ & w/out encoders
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hopper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
+        //Initial Motor Speeds
+        lift.setPower(0);
 
 
     }
+
+
  }
 

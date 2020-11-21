@@ -49,12 +49,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Tank Drive: Master", group="TeleOp")
+@TeleOp(name="Master Code", group="New")
 //@Disabled
-public class MecanumTank_Master extends LinearOpMode {
+public class New_MasterCode extends LinearOpMode {
 
     // Declare OpMode members.
-    HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
+
+    Map_Tank driveMap = new Map_Tank();
+    Map_Lift liftMap = new Map_Lift();
+    Map_Intake intakeMap = new Map_Intake();
+    Map_Shooter shooterMap = new Map_Shooter();
+
     private final ElapsedTime runtime = new ElapsedTime();
 
 
@@ -62,13 +67,14 @@ public class MecanumTank_Master extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        robot.init(hardwareMap);
+        driveMap.init(hardwareMap);
+        liftMap.init(hardwareMap);
+        intakeMap.init(hardwareMap);
+        shooterMap.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
-
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -78,89 +84,82 @@ public class MecanumTank_Master extends LinearOpMode {
             double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
             final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
-            final double frd = magnitudeRight * Math.cos(robotAngleRight);
+            final double frd = -magnitudeRight * Math.cos(robotAngleRight);
             final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
 
-
-
             //Initial Motor Speeds
-            robot.frontLeftDrive.setPower(fld);
-            robot.frontRightDrive.setPower(frd);
-            robot.backLeftDrive.setPower(bld);
-            robot.backRightDrive.setPower(brd);
+            driveMap.frontLeftDrive.setPower(fld);
+            driveMap.frontRightDrive.setPower(frd);
+            driveMap.backLeftDrive.setPower(bld);
+            driveMap.backRightDrive.setPower(brd);
 
-            robot.intake.setPower(0.0);
-            robot.shooter.setPower(0.0);
-            robot.hopper.setPower(0.0);
-            robot.wobbleLift.setPower(0.0);
-            //wobbleClamp.servoSet
-            //Blah... look up how to set servo power
-
+            intakeMap.intake.setPower(0.0);
+            shooterMap.shooter.setPower(0.0);
+            liftMap.lift.setPower(0.0);
 
 
             //Shooter = bumper2 [2]
             double shootSpeed = 1.0;
             if (gamepad2.right_bumper) {
-                robot.shooter.setPower(shootSpeed);
+                shooterMap.shooter.setPower(shootSpeed);
             } else if (gamepad2.left_bumper) {
-                robot.shooter.setPower(-shootSpeed);
+                shooterMap.shooter.setPower(-shootSpeed);
             } else {
-                robot.shooter.setPower(0.0);
-            }
-
-            //Loader servo. Button [2]
-            if (gamepad1.x) {
-                robot.loader.setPosition(robot.loadOff);
-            } else {
-                robot.loader.setPosition(0);
+                shooterMap.shooter.setPower(0.0);
             }
 
             //Lift [Trigger 2]
             double hopperSpeed = 1;
             if (gamepad2.left_trigger >= 0.5) {
-                robot.hopper.setPower(hopperSpeed);
+                liftMap.lift.setPower(hopperSpeed);
 
             } else if (gamepad2.right_trigger >= 0.5) {
-                robot.hopper.setPower(-hopperSpeed);
+                liftMap.lift.setPower(-hopperSpeed);
 
             }else {
-                robot.hopper.setPower(0.0);
+                liftMap.lift.setPower(0.0);
             }
 
-            //Intake Controls= trigger [1]
-            double intakeSpeed = 1;
-            if (gamepad1.left_trigger >= 0.5) {
-                robot.intake.setPower(intakeSpeed);
-
-            }else if (gamepad1.right_trigger >= 0.5) {
-                robot.intake.setPower(-intakeSpeed);
-
-            }else {
-                robot.intake.setPower(0.0);
+            //Loader servo. Button [2]
+            if (gamepad2.a) {
+                shooterMap.loader.setPosition(shooterMap.loadOff);
+            } else {
+                shooterMap.loader.setPosition(0);
             }
 
-       //Strafing
-            double strafeSpeed = 1;
-       if (gamepad1.right_bumper) { //right
-           robot.frontLeftDrive.setPower(-strafeSpeed);
-           robot.frontRightDrive.setPower(strafeSpeed);
-           robot.backLeftDrive.setPower(strafeSpeed);
-           robot.backRightDrive.setPower(-strafeSpeed);
-       }
-       else if (gamepad1.left_bumper) { //left
-           robot.frontLeftDrive.setPower(strafeSpeed);
-           robot.frontRightDrive.setPower(-strafeSpeed);
-           robot.backLeftDrive.setPower(-strafeSpeed);
-           robot.backRightDrive.setPower(strafeSpeed);
-       }
-       else {
-           robot.frontLeftDrive.setPower(fld);
-           robot.frontRightDrive.setPower(frd);
-           robot.backLeftDrive.setPower(bld);
-           robot.backRightDrive.setPower(brd);
-       }
+           //Intake Controls= trigger [1]
+           double intakeSpeed = 1.0;
+           if (gamepad1.left_trigger >= 0.5)
+               intakeMap.intake.setPower(intakeSpeed);
+
+           else if (gamepad1.right_trigger >= 0.5)
+               intakeMap.intake.setPower(-intakeSpeed);
+
+           else
+               intakeMap.intake.setPower(0.0);
+
+
+           //Strafing [1]
+           if (gamepad1.right_bumper) { //right
+               driveMap.frontLeftDrive.setPower(-1);
+               driveMap.frontRightDrive.setPower(1);
+               driveMap.backLeftDrive.setPower(1);
+               driveMap.backRightDrive.setPower(-1);
+           }
+           else if (gamepad1.left_bumper) { //left
+               driveMap.frontLeftDrive.setPower(1);
+               driveMap.frontRightDrive.setPower(-1);
+               driveMap.backLeftDrive.setPower(-1);
+               driveMap.backRightDrive.setPower(1);
+           }
+           else {
+               driveMap.frontLeftDrive.setPower(fld);
+               driveMap.frontRightDrive.setPower(frd);
+               driveMap.backLeftDrive.setPower(bld);
+               driveMap.backRightDrive.setPower(brd);
+           }
 
 
             // Show the elapsed game time and wheel power.

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -51,25 +52,28 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
-@TeleOp(name = "Sensor: REV2mDistance", group = "Subsystem")
-@Disabled
+@TeleOp(name = "Sensor: REV2mDistance", group = "Auto Test??")
+//@Disabled
 public class Subsystem_Sensor2M extends LinearOpMode {
 
-    private DistanceSensor sensorRange;
+    // Declare OpMode members.
+    Map_Sensor2M robot = new Map_Sensor2M();
+    private final ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() {
-        // you can use this as a regular DistanceSensor.
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor2M");
 
         telemetry.addData(">>", "Press start to continue");
         telemetry.update();
+        robot.init(hardwareMap);
+
 
         waitForStart();
         while(opModeIsActive()) {
             // generic DistanceSensor methods.
-            telemetry.addData("deviceName",sensorRange.getDeviceName() );
-            telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
+            telemetry.addData("deviceName",robot.sensorRange.getDeviceName() );
+            telemetry.addData("range", String.format("%.01f mm", robot.sensorRange.getDistance(DistanceUnit.MM)));
             //telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
             //telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));
             //telemetry.addData("range", String.format("Test Inch: ", sensorRange.getDistance(DistanceUnit.INCH) ));
