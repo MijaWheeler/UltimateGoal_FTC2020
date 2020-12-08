@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -62,6 +63,7 @@ public class Map_Auto_Tank
     public DcMotor backLeftDrive;
     public DcMotor backRightDrive;
     public DistanceSensor sensorRange;
+    public Servo wobbleServo;
 
     Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
@@ -70,10 +72,11 @@ public class Map_Auto_Tank
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
 
     //SPEED
     static final double     DRIVE_SPEED = 0.6;
+    static final double     dropWobble = 0.5;
 
     //Mounting height of 2m sensor in MM
     static final double     snsrMount  =  101.6; //
@@ -98,22 +101,17 @@ public class Map_Auto_Tank
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-
         frontLeftDrive  = hwMap.get(DcMotor.class,"frontLeftDrive");
         frontRightDrive = hwMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive   = hwMap.get(DcMotor.class,"backLeftDrive");
         backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
-
+        wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
 
         //Set motor direction
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);// kinda sus
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //Set motor w/ & w/out encoders
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -122,8 +120,6 @@ public class Map_Auto_Tank
         backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
-
-
 
         //Initial Motor Speeds
         frontLeftDrive.setPower(0);

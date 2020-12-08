@@ -53,11 +53,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
 @TeleOp(name = "Sensor: REV2mDistance", group = "Auto Test??")
-//@Disabled
+@Disabled
 public class Subsystem_Sensor2M extends LinearOpMode {
 
     // Declare OpMode members.
     Map_Sensor2M robot = new Map_Sensor2M();
+    Map_Tank tank = new Map_Tank();
+
     private final ElapsedTime runtime = new ElapsedTime();
 
 
@@ -67,6 +69,8 @@ public class Subsystem_Sensor2M extends LinearOpMode {
         telemetry.addData(">>", "Press start to continue");
         telemetry.update();
         robot.init(hardwareMap);
+        tank.init(hardwareMap);
+
 
 
         waitForStart();
@@ -77,6 +81,22 @@ public class Subsystem_Sensor2M extends LinearOpMode {
             //telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
             //telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));
             //telemetry.addData("range", String.format("Test Inch: ", sensorRange.getDistance(DistanceUnit.INCH) ));
+
+            if (robot.stackHeight <= 500 || robot.stackHeight >= 350) //1 ring = .75; Tar B [350-500mm]
+            {
+                telemetry.addData("Status", "Target B");
+            }
+            else if (robot.stackHeight >= 800 ) //4 ring = 3; Tar C [800-1100mm]
+            {
+                telemetry.addData("Status", "Target C");
+            }
+            else if (robot.stackHeight <= 200 ) //0 ring = 0; Tar A [0-200 mm]
+            {
+                telemetry.addData("Status", "Target A");
+            } else {
+                telemetry.addData("Status", "Error");
+
+            }
 
             telemetry.update();
         }

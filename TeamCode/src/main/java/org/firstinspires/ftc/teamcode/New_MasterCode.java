@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Master Code", group="New")
-//@Disabled
+@Disabled
 public class New_MasterCode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -84,7 +84,7 @@ public class New_MasterCode extends LinearOpMode {
             double robotAngleLeft = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             double robotAngleRight = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.PI / 4;
             final double fld = magnitudeLeft * Math.sin(robotAngleLeft);
-            final double frd = -magnitudeRight * Math.cos(robotAngleRight);
+            final double frd = magnitudeRight * Math.cos(robotAngleRight);
             final double bld = magnitudeLeft * Math.cos(robotAngleLeft);
             final double brd = magnitudeRight * Math.sin(robotAngleRight);
 
@@ -124,10 +124,19 @@ public class New_MasterCode extends LinearOpMode {
 
             //Loader servo. Button [2]
             if (gamepad2.a) {
-                shooterMap.loader.setPosition(shooterMap.loadOff);
+                shooterMap.loader.setPosition(shooterMap.stop);
             } else {
-                shooterMap.loader.setPosition(0);
+                shooterMap.loader.setPosition(shooterMap.start);
             }
+
+            //Flicker servo. Button [2]
+            if (gamepad2.b) {
+                shooterMap.flick.setPosition(shooterMap.stop);
+            } else {
+                shooterMap.flick.setPosition(shooterMap.start);
+            }
+
+
 
            //Intake Controls= trigger [1]
            double intakeSpeed = 1.0;
@@ -142,17 +151,20 @@ public class New_MasterCode extends LinearOpMode {
 
 
            //Strafing [1]
-           if (gamepad1.right_bumper) { //right
-               driveMap.frontLeftDrive.setPower(-1);
-               driveMap.frontRightDrive.setPower(1);
-               driveMap.backLeftDrive.setPower(1);
-               driveMap.backRightDrive.setPower(-1);
+            double driveSpeed = .2;
+            double  driveSpeed1 = 1;
+
+            if (gamepad1.right_bumper) { //right
+               driveMap.frontLeftDrive.setPower(-driveSpeed1);
+               driveMap.frontRightDrive.setPower(driveSpeed1);
+               driveMap.backLeftDrive.setPower(driveSpeed1);
+               driveMap.backRightDrive.setPower(-driveSpeed1);
            }
            else if (gamepad1.left_bumper) { //left
-               driveMap.frontLeftDrive.setPower(1);
-               driveMap.frontRightDrive.setPower(-1);
-               driveMap.backLeftDrive.setPower(-1);
-               driveMap.backRightDrive.setPower(1);
+               driveMap.frontLeftDrive.setPower(driveSpeed1);
+               driveMap.frontRightDrive.setPower(-driveSpeed1);
+               driveMap.backLeftDrive.setPower(-driveSpeed1);
+               driveMap.backRightDrive.setPower(driveSpeed1);
            }
            else {
                driveMap.frontLeftDrive.setPower(fld);

@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Lift", group="Subsystem")
-//@Disabled
+@Disabled
 public class Subsystem_Lift extends LinearOpMode {
 
     // Declare OpMode members.

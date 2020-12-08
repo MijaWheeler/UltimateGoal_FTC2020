@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
@@ -53,6 +54,10 @@ public class Map_Sensor2M
 {
     /* Public OpMode members. */
     public DistanceSensor sensorRange;
+    //Mounting height of 2m sensor in MM
+    static final double     snsrMount  =  101.6; //
+    double stackHeight = sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
+
 
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap           =  null;
@@ -66,7 +71,6 @@ public class Map_Sensor2M
     public void init(com.qualcomm.robotcore.hardware.HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
         sensorRange     = hwMap.get(DistanceSensor.class, "sensor2M");
 
 

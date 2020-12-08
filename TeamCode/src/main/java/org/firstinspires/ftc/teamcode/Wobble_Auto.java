@@ -34,6 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -65,10 +67,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Wobble Auto", group = "Test")
+@Autonomous(name = "Wobble Auto TEST!!!", group = "Test")
 //@Disabled
 public class Wobble_Auto extends LinearOpMode {
-    private Map_Auto_Tank robot        = new Map_Auto_Tank(); // use the class created to define a Pushbot's hardware
+    private Map_Auto_Tank         robot   = new Map_Auto_Tank(); // use the class created to define a Pushbot's hardware
+    private Map_Sensor2M          sensor2M   = new Map_Sensor2M();
     private final ElapsedTime     runtime = new ElapsedTime();
 
     /*
@@ -103,6 +106,9 @@ public class Wobble_Auto extends LinearOpMode {
     private final DcMotor frontRight = robot.frontRightDrive;
     private final DcMotor backLeft = robot.backLeftDrive;
     private final DcMotor backRight = robot.backRightDrive;
+    private final Servo wobble = robot.wobbleServo;
+    private final DistanceSensor distSensor = sensor2M.sensorRange;
+
 
 
     @Override
@@ -117,6 +123,8 @@ public class Wobble_Auto extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
         robot.init(hardwareMap);
+        sensor2M.init(hardwareMap);
+
 
 
 
@@ -139,7 +147,7 @@ public class Wobble_Auto extends LinearOpMode {
         {
             encoderDrive(robot.DRIVE_SPEED, 96, 96, 10.0); // S3: Forward 96in
             sleep(1000);
-            //S4: Drop Woddle
+            //wobble.setPosition(robot.dropWobble);  //S4: Drop Woddle
             sleep(1000);
             encoderDrive(robot.DRIVE_SPEED, -24, -24, 10.0); // S5: Reverse 24in. Park
             sleep(1000);
@@ -150,7 +158,7 @@ public class Wobble_Auto extends LinearOpMode {
             sleep(1000);
             encoderDrive(robot.DRIVE_SPEED, 96, 96, 10.0); // S4: Forward 96in
             sleep(1000);
-            // S5: Drop woddle
+            //wobble.setPosition(robot.dropWobble); // S5: Drop woddle
             sleep(1000);
             encoderDrive(robot.DRIVE_SPEED, -60, -60, 10.0); // S6: Backward 60. Park
             sleep(1000);
@@ -164,7 +172,7 @@ public class Wobble_Auto extends LinearOpMode {
             sleep(1000);
             encoderDrive(robot.DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
             sleep(1000);
-            // S5: Drop woddle
+            //wobble.setPosition(robot.dropWobble);// S5: Drop woddle
 
         }
 
@@ -185,18 +193,6 @@ public class Wobble_Auto extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-/*
-    public void positonA() {
-        stackHeight = this.stackHeight;
-        encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S3: Strafe right 24in idk
-        sleep(1000);
-        encoderDrive(DRIVE_SPEED, 30, 30, 10.0); // S4: Forward 30in. Park
-        sleep(1000);
-        // S5: Drop woddle
-
-    }
-
- */
 
     public void encoderDrive(double speed, double leftInches,
                              double rightInches, double timeoutS) {

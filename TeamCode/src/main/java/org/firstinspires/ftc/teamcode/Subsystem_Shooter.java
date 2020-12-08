@@ -91,11 +91,16 @@ public class Subsystem_Shooter extends LinearOpMode {
 
             //Loader servo. Button [2]
             if (gamepad2.a) {
-                robot.loader.setPosition(robot.loadOff);
+                robot.loader.setPosition(robot.start);
             } else {
-                robot.loader.setPosition(0);
+                robot.loader.setPosition(robot.stop);
             }
 
+            if (gamepad2.b) {
+                robot.flick.setPosition(robot.start);
+            } else {
+                robot.flick.setPosition(robot.stop);
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
