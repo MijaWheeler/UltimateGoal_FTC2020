@@ -40,8 +40,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+//import com.qualcomm.robotcore.hardware.DistanceSensor;
+//import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
 //import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -94,7 +94,6 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
     private final DcMotor backLeft = robot.backLeftDrive;
     private final DcMotor backRight = robot.backRightDrive;
     private ColorSensor sensorColor;
-    private DistanceSensor sensorDistance;
 
 
     @Override
@@ -107,6 +106,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
         robot.init(hardwareMap);
 
 //Encoder Stuff
+        /*
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
@@ -127,6 +127,8 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
                           frontLeft.getCurrentPosition(),
                           frontRight.getCurrentPosition());
         telemetry.update();
+
+         */
 
 //_______________Sensor Stuff_________________________
 
@@ -159,7 +161,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
         //_____________ACTIONS____________________
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        getRGB(240, 240, 240);
+        getRGB(200, 200, 200, 20);
         //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
@@ -174,7 +176,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
 
 
 
-    public void getRGB( int r, int g, int b) {
+    public void getRGB( int r, int g, int b, double sec) {
          double SCALE_FACTOR = 255;
          float hsvValues[] = {0F, 0F, 0F}; // hsvValues is an array that will hold the hue, saturation, and value information.
         final float values[] = hsvValues; // values is a reference to the hsvValues array.
@@ -194,17 +196,21 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            //telemetry.addData("Distance (cm)",
+                    //String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
             telemetry.addData("Alpha", sensorColor.alpha());
             telemetry.addData("Red  ", R);
             telemetry.addData("Green", G);
             telemetry.addData("Blue ", B);
             telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
+
 
         }
 
-        while (opModeIsActive() && (r <= R) && (g <= G) && b <= B ) {
+        while (opModeIsActive() && runtime.seconds() < sec && (r <= R) && (g <= G) && b <= B ) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
             frontLeft.setPower(DRIVE_SPEED);
             frontRight.setPower(DRIVE_SPEED);
             backLeft.setPower(DRIVE_SPEED);
@@ -230,6 +236,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
+    /*
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -283,4 +290,6 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+    */
+
 }
