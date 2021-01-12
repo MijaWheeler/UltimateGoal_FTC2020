@@ -60,7 +60,6 @@ public class Map_Tank
     public DcMotor backLeftDrive;
     public DcMotor backRightDrive;
 
-
     /* local OpMode members. */
     com.qualcomm.robotcore.hardware.HardwareMap hwMap           =  null;
     //public ElapsedTime runtime  = new ElapsedTime();

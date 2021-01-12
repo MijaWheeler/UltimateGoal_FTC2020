@@ -35,7 +35,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+//Sensor Imports
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import java.util.Locale;
+
+//import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -64,29 +73,29 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Park Auto", group = "Pushbot")
-@Disabled
-public class Park_Auto extends LinearOpMode {
-    HardwareMap robot       = new HardwareMap(); // use the class created to define a Pushbot's hardware
+@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
+//@Disabled
+public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
+
+    /* Declare OpMode members. */
+    Map_Auto_Tank  robot   = new Map_Auto_Tank ();   // Use a Pushbot's hardware
     private final ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
 
     private final DcMotor frontLeft = robot.frontLeftDrive;
     private final DcMotor frontRight = robot.frontRightDrive;
     private final DcMotor backLeft = robot.backLeftDrive;
     private final DcMotor backRight = robot.backRightDrive;
-    private final DcMotor shoot = robot.shooter;
-    private final DcMotor hopper = robot.hopper;
+    private ColorSensor sensorColor;
+    private DistanceSensor sensorDistance;
 
-    static final double     DRIVE_SPEED = 0.6;
-    static final double     STRAFE_SPEED  =  0.5;
-    static final double     SHOOT_SPEED =  0.5;
-    static final double     HOPPER_SPEED  =  0.5;
 
     @Override
     public void runOpMode() {
@@ -95,54 +104,126 @@ public class Park_Auto extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
+        robot.init(hardwareMap);
 
-
+//Encoder Stuff
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
-        robot.init(hardwareMap);
 
-        /*
-        //Set motor w/ & w/out encoders
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hopperAim.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+  //      backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setDirection(DcMotor.Direction.REVERSE);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-*/
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                frontLeft.getCurrentPosition(),
-                frontRight.getCurrentPosition());
+                          frontLeft.getCurrentPosition(),
+                          frontRight.getCurrentPosition());
         telemetry.update();
+
+//_______________Sensor Stuff_________________________
+
+        // get a reference to the color sensor.
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor2M");
+
+        // get a reference to the distance sensor that shares the same name.
+        //sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+       // float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        //final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        //final double SCALE_FACTOR = 255;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        //int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        //final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-
+        //_____________ACTIONS____________________
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  80.5,  80.5, 10.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        getRGB(240, 240, 240);
+        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        //robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
+
+
+    public void getRGB( int r, int g, int b) {
+         double SCALE_FACTOR = 255;
+         float hsvValues[] = {0F, 0F, 0F}; // hsvValues is an array that will hold the hue, saturation, and value information.
+        final float values[] = hsvValues; // values is a reference to the hsvValues array.
+        int R = sensorColor.red();
+        int G = sensorColor.green();
+        int B = sensorColor.blue();
+
+        // loop and read the RGB and distance data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+        while (opModeIsActive()) {
+            // convert the RGB values to HSV values.
+            // multiply by the SCALE_FACTOR.
+            // then cast it back to int (SCALE_FACTOR is a double)
+            Color.RGBToHSV((int) (R * SCALE_FACTOR),
+                    (int) (G * SCALE_FACTOR),
+                    (int) (B * SCALE_FACTOR),
+                    hsvValues);
+
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("Distance (cm)",
+                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", R);
+            telemetry.addData("Green", G);
+            telemetry.addData("Blue ", B);
+            telemetry.addData("Hue", hsvValues[0]);
+
+        }
+
+        while (opModeIsActive() && (r <= R) && (g <= G) && b <= B ) {
+            frontLeft.setPower(DRIVE_SPEED);
+            frontRight.setPower(DRIVE_SPEED);
+            backLeft.setPower(DRIVE_SPEED);
+            backRight.setPower(DRIVE_SPEED);
+            sleep(250);   // optional pause after each move
+
+        }
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+    }
+
+
+
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
@@ -151,8 +232,6 @@ public class Park_Auto extends LinearOpMode {
      */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
-                             // double leftInches, double rightInches,
-
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
@@ -175,9 +254,6 @@ public class Park_Auto extends LinearOpMode {
             frontLeft.setPower(Math.abs(speed));
             frontRight.setPower(Math.abs(speed));
 
-            backLeft.setPower(Math.abs(speed));
-            backRight.setPower(Math.abs(speed));
-
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -185,28 +261,24 @@ public class Park_Auto extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (frontLeft.isBusy() && frontRight.isBusy())) {
+                   (runtime.seconds() < timeoutS) &&
+                   (frontLeft.isBusy() && frontRight.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        frontLeft.getCurrentPosition(),
-                        frontRight.getCurrentPosition());
+                                            frontLeft.getCurrentPosition(),
+                                            frontRight.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
             frontLeft.setPower(0);
             frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
             frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }

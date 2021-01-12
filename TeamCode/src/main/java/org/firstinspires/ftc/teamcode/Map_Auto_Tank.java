@@ -62,10 +62,9 @@ public class Map_Auto_Tank
     public DcMotor frontRightDrive;
     public DcMotor backLeftDrive;
     public DcMotor backRightDrive;
-    public DistanceSensor sensorRange;
-    public Servo wobbleServo;
-
-    Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+    //public DistanceSensor sensorRange;
+    //public Servo wobbleServo;
+    //Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -79,8 +78,8 @@ public class Map_Auto_Tank
     static final double     dropWobble = 0.5;
 
     //Mounting height of 2m sensor in MM
-    static final double     snsrMount  =  101.6; //
-    double stackHeight = sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
+   // static final double     snsrMount  =  101.6; //
+   // double stackHeight = sensorRange.getDistance(DistanceUnit.MM) - snsrMount;
 
 
 
@@ -105,7 +104,7 @@ public class Map_Auto_Tank
         frontRightDrive = hwMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive   = hwMap.get(DcMotor.class,"backLeftDrive");
         backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
-        wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
+       // wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
 
         //Set motor direction
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -116,10 +115,10 @@ public class Map_Auto_Tank
         //Set motor w/ & w/out encoders
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+       // Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
 
         //Initial Motor Speeds
         frontLeftDrive.setPower(0);
@@ -128,7 +127,6 @@ public class Map_Auto_Tank
         backRightDrive.setPower(0);
 
     }
-
 
  }
 

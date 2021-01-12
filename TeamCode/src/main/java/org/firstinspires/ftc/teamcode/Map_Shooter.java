@@ -54,14 +54,11 @@ public class Map_Shooter
     /* Public OpMode members. */
     public DcMotor shooter;
     public Servo loader;
-    public Servo flick;
+    public Servo frontFlick;
+    public Servo sideFlick;
+
     public static final double stop    =  1 ;
     public static final double start    =  0.1;
-
-    //public static final double stop    =  1 ;
-   // public static final double start    =  0.1;
-
-
 
 
     /* local OpMode members. */
@@ -78,8 +75,8 @@ public class Map_Shooter
         hwMap = ahwMap;
         shooter  = hwMap.get(DcMotor.class,"shooter");
         loader    = hwMap.get(Servo.class, "loader");
-        flick   = hwMap.get(Servo.class, "flick");
-
+        frontFlick   = hwMap.get(Servo.class, "Front Flick");
+        sideFlick   = hwMap.get(Servo.class, "Side Flick");
 
 
         //Set motor direction

@@ -50,11 +50,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Master Code", group="New")
-@Disabled
+///@Disabled
 public class New_MasterCode extends LinearOpMode {
 
     // Declare OpMode members.
-
     Map_Tank driveMap = new Map_Tank();
     Map_Lift liftMap = new Map_Lift();
     Map_Intake intakeMap = new Map_Intake();
@@ -131,11 +130,17 @@ public class New_MasterCode extends LinearOpMode {
 
             //Flicker servo. Button [2]
             if (gamepad2.b) {
-                shooterMap.flick.setPosition(shooterMap.stop);
+                shooterMap.frontFlick.setPosition(shooterMap.stop);
             } else {
-                shooterMap.flick.setPosition(shooterMap.start);
+                shooterMap.frontFlick.setPosition(shooterMap.start);
             }
 
+            //Flicker servo. Button [2]
+            if (gamepad2.x) {
+                shooterMap.sideFlick.setPosition(shooterMap.start);
+            } else {
+                shooterMap.sideFlick.setPosition(shooterMap.stop);
+            }
 
 
            //Intake Controls= trigger [1]

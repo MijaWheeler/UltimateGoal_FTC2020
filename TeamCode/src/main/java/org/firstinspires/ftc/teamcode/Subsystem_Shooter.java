@@ -53,8 +53,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Shooter + Servo", group="Subsystem")
-//@Disabled
+@TeleOp(name="BLAH", group="Subsystem")
+@Disabled
 public class Subsystem_Shooter extends LinearOpMode {
 
     // Declare OpMode members.
@@ -97,9 +97,15 @@ public class Subsystem_Shooter extends LinearOpMode {
             }
 
             if (gamepad2.b) {
-                robot.flick.setPosition(robot.start);
+                robot.frontFlick.setPosition(robot.start);
             } else {
-                robot.flick.setPosition(robot.stop);
+                robot.frontFlick.setPosition(robot.stop);
+            }
+
+            if (gamepad2.x) {
+                robot.sideFlick.setPosition(robot.start);
+            } else {
+                robot.sideFlick.setPosition(robot.stop);
             }
 
             // Show the elapsed game time and wheel power.
