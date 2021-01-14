@@ -32,11 +32,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //Sensor Imports
 import android.app.Activity;
+///import android.graphics.Color;
 import android.graphics.Color;
 import android.view.View;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -73,7 +75,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="STINKY", group="Pushbot")
 //@Disabled
 public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
 
@@ -81,11 +83,6 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
     Map_Auto_Tank  robot   = new Map_Auto_Tank ();   // Use a Pushbot's hardware
     private final ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
@@ -93,7 +90,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
     private final DcMotor frontRight = robot.frontRightDrive;
     private final DcMotor backLeft = robot.backLeftDrive;
     private final DcMotor backRight = robot.backRightDrive;
-    private ColorSensor sensorColor;
+    //private ColorSensor sensorColor;
 
 
     @Override
@@ -133,7 +130,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
 //_______________Sensor Stuff_________________________
 
         // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor2M");
+        //sensorColor = hardwareMap.get(ColorRangeSensor.class, "sensor2M");
 
         // get a reference to the distance sensor that shares the same name.
         //sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
@@ -158,10 +155,19 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        frontLeft.setPower(DRIVE_SPEED);
+        frontRight.setPower(DRIVE_SPEED);
+        backRight.setPower(DRIVE_SPEED);
+        backLeft.setPower(DRIVE_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 20)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
         //_____________ACTIONS____________________
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        getRGB(200, 200, 200, 20);
+        //getRGB(200, 200, 200, 20);
         //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
@@ -175,14 +181,14 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
     }
 
 
-
+/*
     public void getRGB( int r, int g, int b, double sec) {
          double SCALE_FACTOR = 255;
          float hsvValues[] = {0F, 0F, 0F}; // hsvValues is an array that will hold the hue, saturation, and value information.
         final float values[] = hsvValues; // values is a reference to the hsvValues array.
-        int R = sensorColor.red();
-        int G = sensorColor.green();
-        int B = sensorColor.blue();
+        int realR = sensorColor.red();
+        int realG = sensorColor.green();
+        int realB = sensorColor.blue();
 
         // loop and read the RGB and distance data.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
@@ -190,25 +196,25 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (R * SCALE_FACTOR),
-                    (int) (G * SCALE_FACTOR),
-                    (int) (B * SCALE_FACTOR),
+            Color.RGBToHSV((int) (realR * SCALE_FACTOR),
+                    (int) (realG * SCALE_FACTOR),
+                    (int) (realB * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             //telemetry.addData("Distance (cm)",
                     //String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
             telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", R);
-            telemetry.addData("Green", G);
-            telemetry.addData("Blue ", B);
+            telemetry.addData("Red  ", realR);
+            telemetry.addData("Green", realG);
+            telemetry.addData("Blue ", realB);
             telemetry.addData("Hue", hsvValues[0]);
             telemetry.update();
 
 
         }
 
-        while (opModeIsActive() && runtime.seconds() < sec && (r <= R) && (g <= G) && b <= B ) {
+        while (opModeIsActive() && runtime.seconds() < sec && (realR < r) ) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             frontLeft.setPower(DRIVE_SPEED);
@@ -226,7 +232,7 @@ public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
 
     }
 
-
+*/
 
     /*
      *  Method to perform a relative move, based on encoder counts.
