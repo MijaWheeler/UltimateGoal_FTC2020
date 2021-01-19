@@ -102,7 +102,8 @@ public class Map_Auto_Tank
         frontRightDrive = hwMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive   = hwMap.get(DcMotor.class,"backLeftDrive");
         backRightDrive  = hwMap.get(DcMotor.class, "backRightDrive");
-       // wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
+
+        // wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
 
         //Set motor direction
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);

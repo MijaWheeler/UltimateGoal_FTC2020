@@ -75,6 +75,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+
 @Autonomous(name="STINKY", group="Pushbot")
 //@Disabled
 public class Auto_Test_AutoDriveByEncoder extends LinearOpMode {
