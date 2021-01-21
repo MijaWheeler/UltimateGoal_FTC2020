@@ -100,7 +100,7 @@ public class New_MasterCode extends LinearOpMode {
 
 
             //Shooter = bumper2 [2]
-            double shootSpeed = 1.0;
+            double shootSpeed = 1;
             if (gamepad2.right_bumper) {
                 shooterMap.shooter.setPower(shootSpeed);
             } else if (gamepad2.left_bumper) {
