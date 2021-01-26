@@ -145,14 +145,16 @@ public class New_MasterCode extends LinearOpMode {
 
            //Intake Controls= trigger [1]
            double intakeSpeed = 1.0;
-           if (gamepad1.left_trigger >= 0.5)
+           if (gamepad1.left_trigger >= 0.5) {
                intakeMap.intake.setPower(intakeSpeed);
 
-           else if (gamepad1.right_trigger >= 0.5)
-               intakeMap.intake.setPower(-intakeSpeed);
+           }else if
+                (gamepad1.right_trigger >= 0.5){
+                intakeMap.intake.setPower(-intakeSpeed);
 
-           else
-               intakeMap.intake.setPower(0.0);
+            }else{
+                intakeMap.intake.setPower(0.0);
+            }
 
 
            //Strafing [1]
