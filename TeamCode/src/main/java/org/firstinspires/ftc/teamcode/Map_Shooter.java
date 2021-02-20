@@ -59,6 +59,8 @@ public class Map_Shooter
 
     public static final double stop    =  1 ;
     public static final double start    =  0.1;
+    public double fast = 1;
+    public double slow = .8;
 
 
     /* local OpMode members. */

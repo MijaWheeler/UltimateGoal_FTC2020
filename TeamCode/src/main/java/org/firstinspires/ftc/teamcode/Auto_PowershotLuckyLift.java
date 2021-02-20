@@ -79,7 +79,7 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
     //private DcMotor simp;
 
     static final double     FORWARD_SPEED = 0.3;
-    static final double     SHOOT_SPEED    = .9;
+    static final double     SHOOT_SPEED    = .75;
     static final double     PWRSHT_SPEED    = 1; //powershot
     static final double     stop   = 0.1;
     static final double     start   = 1;
@@ -130,6 +130,14 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        /*
+        Note: 2/5/2021
+        need to add varied stop points on the lift teleop so that the trigger
+        ie 0.5 = .5 power
+        0.7 = 0.7 power
+        need to fix shooting
+         */
+
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
         frontLeftDrive.setPower(0);
@@ -139,8 +147,8 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         shooter.setPower(0);
         loader.setPosition(stop);
 
-
-        double Lift_SPEED = 0.8;
+        //Lift up
+        double Lift_SPEED = 0.6;
         runtime.reset();
         lift.setPower(Lift_SPEED);
         sleep(1000);
@@ -151,24 +159,56 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
             telemetry.update();
         }
 
-        lift.setPower(0);
-        sleep(1000);
-        shooter.setPower(PWRSHT_SPEED);
-        sleep(1000);
-        for (int i = 0; i < 2; i++){
-            loader.setPosition(start/2);
-            sleep(500);
-            loader.setPosition(stop);
-        }
-        loader.setPosition(start);
-        sleep(1000);
+
+        frontLeftDrive.setPower(FORWARD_SPEED);
+        frontRightDrive.setPower(FORWARD_SPEED);
+        backLeftDrive.setPower(FORWARD_SPEED);
+        backRightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 5.0 )) {
+        while (opModeIsActive() && (runtime.seconds() < .8)) { //5
             telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
             telemetry.update();
         }
 
 
+        //Shoot. Lift stop.
+        sleep(500);
+        lift.setPower(0);
+        frontLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        backRightDrive.setPower(0);
+
+        sleep(1000);
+        shooter.setPower(PWRSHT_SPEED);
+        sleep(1500);
+        /*
+        for (int i = 0; i < 2; i++){
+            loader.setPosition(start/2);
+            sleep(500);
+            loader.setPosition(stop);
+        }
+
+         */
+        loader.setPosition(start);
+        sleep(1000);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 4.0 )) {
+            telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        //Forward
+        frontLeftDrive.setPower(FORWARD_SPEED);
+        frontRightDrive.setPower(FORWARD_SPEED);
+        backLeftDrive.setPower(FORWARD_SPEED);
+        backRightDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() &&
+                (runtime.seconds() < 2.4)) { //5
+            telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
 /*
         // Step 1:  Powershot

@@ -30,7 +30,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Master Code", group="New")
+@TeleOp(name="God", group="New")
 ///@Disabled
-public class New_MasterCode extends LinearOpMode {
+public class New_GodCode extends LinearOpMode {
 
     // Declare OpMode members.
     Map_Tank driveMap = new Map_Tank();
@@ -99,17 +98,16 @@ public class New_MasterCode extends LinearOpMode {
             liftMap.lift.setPower(0.0);
 
 
-            //Shooter = bumper2 [2]
+            //Shooter = bumper2 [32]
             double shootSpeed;
             if (gamepad1.y){ // if button one is pressed
                 shootSpeed = shooterMap.slow;
             } else {
                 shootSpeed = shooterMap.fast;
             }
-
-            if (gamepad2.right_bumper) {
+            if (gamepad1.right_bumper) {
                 shooterMap.shooter.setPower(shootSpeed);
-            } else if (gamepad2.left_bumper) {
+            } else if (gamepad1.left_bumper) {
                 shooterMap.shooter.setPower(-shootSpeed);
             } else {
                 shooterMap.shooter.setPower(0.0);
@@ -117,10 +115,10 @@ public class New_MasterCode extends LinearOpMode {
 
             //Lift [Trigger 2]
             double hopperSpeed = 1;
-            if (gamepad2.left_trigger >= 0.5) {
+            if (gamepad1.dpad_up) {
                 liftMap.lift.setPower(hopperSpeed);
 
-            } else if (gamepad2.right_trigger >= 0.5) {
+            } else if (gamepad1.dpad_down) {
                 liftMap.lift.setPower(-hopperSpeed);
 
             }else {
@@ -128,21 +126,21 @@ public class New_MasterCode extends LinearOpMode {
             }
 
             //Loader servo. Button [2]
-            if (gamepad2.a) {
+            if (gamepad1.a) {
                 shooterMap.loader.setPosition(shooterMap.stop);
             } else {
                 shooterMap.loader.setPosition(shooterMap.start);
             }
 
             //Flicker servo. Button [2]
-            if (gamepad2.b) {
+            if (gamepad1.b) {
                 shooterMap.frontFlick.setPosition(shooterMap.stop);
             } else {
                 shooterMap.frontFlick.setPosition(shooterMap.start);
             }
 
             //Flicker servo. Button [2]
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 shooterMap.sideFlick.setPosition(shooterMap.start);
             } else {
                 shooterMap.sideFlick.setPosition(shooterMap.stop);
@@ -163,10 +161,10 @@ public class New_MasterCode extends LinearOpMode {
             }
 
 
+           /*
            //Strafing [1]
             double driveSpeed = .2;
             double  driveSpeed1 = 1;
-
             if (gamepad1.right_bumper) { //right
                driveMap.frontLeftDrive.setPower(-driveSpeed1);
                driveMap.frontRightDrive.setPower(driveSpeed1);
@@ -186,6 +184,7 @@ public class New_MasterCode extends LinearOpMode {
                driveMap.backRightDrive.setPower(brd);
            }
 
+            */
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
