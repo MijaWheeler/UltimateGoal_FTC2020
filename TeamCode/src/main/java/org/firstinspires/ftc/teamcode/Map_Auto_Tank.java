@@ -106,10 +106,10 @@ public class Map_Auto_Tank
         // wobbleServo          = hwMap.get(Servo.class, "wobbleServo");
 
         //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);// kinda sus
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);// kinda sus
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         //Set motor w/ & w/out encoders
         //frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

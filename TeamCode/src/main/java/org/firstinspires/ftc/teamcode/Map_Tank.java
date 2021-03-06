@@ -83,10 +83,10 @@ public class Map_Tank
 
 
         //Set motor direction
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE);// kinda sus
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);// kinda sus
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
 

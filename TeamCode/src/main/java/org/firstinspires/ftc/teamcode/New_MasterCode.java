@@ -117,10 +117,10 @@ public class New_MasterCode extends LinearOpMode {
 
             //Lift [Trigger 2]
             double hopperSpeed = 1;
-            if (gamepad2.left_trigger >= 0.5) {
+            if (gamepad2.dpad_up) {
                 liftMap.lift.setPower(hopperSpeed);
 
-            } else if (gamepad2.right_trigger >= 0.5) {
+            } else if (gamepad2.dpad_down) {
                 liftMap.lift.setPower(-hopperSpeed);
 
             }else {

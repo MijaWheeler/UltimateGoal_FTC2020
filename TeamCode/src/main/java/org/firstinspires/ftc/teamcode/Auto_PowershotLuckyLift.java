@@ -79,7 +79,7 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
     //private DcMotor simp;
 
     static final double     FORWARD_SPEED = 0.3;
-    static final double     SHOOT_SPEED    = .75;
+    static final double     SHOOT_SPEED    = .7;
     static final double     PWRSHT_SPEED    = 1; //powershot
     static final double     stop   = 0.1;
     static final double     start   = 1;
@@ -111,6 +111,7 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);// kinda sus
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
         lift.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.FORWARD);
 

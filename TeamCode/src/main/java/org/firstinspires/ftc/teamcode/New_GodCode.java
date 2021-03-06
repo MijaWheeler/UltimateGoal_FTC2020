@@ -113,6 +113,7 @@ public class New_GodCode extends LinearOpMode {
                 shooterMap.shooter.setPower(0.0);
             }
 
+
             //Lift [Trigger 2]
             double hopperSpeed = 1;
             if (gamepad1.dpad_up) {
@@ -126,24 +127,32 @@ public class New_GodCode extends LinearOpMode {
             }
 
             //Loader servo. Button [2]
+            //Loader servo. Button [2]
             if (gamepad1.a) {
                 shooterMap.loader.setPosition(shooterMap.stop);
             } else {
                 shooterMap.loader.setPosition(shooterMap.start);
-            }
+                telemetry.addData("Load", "A");
 
-            //Flicker servo. Button [2]
-            if (gamepad1.b) {
-                shooterMap.frontFlick.setPosition(shooterMap.stop);
-            } else {
-                shooterMap.frontFlick.setPosition(shooterMap.start);
             }
 
             //Flicker servo. Button [2]
             if (gamepad1.x) {
                 shooterMap.sideFlick.setPosition(shooterMap.start);
+                telemetry.addData("Side", "X");
+
             } else {
                 shooterMap.sideFlick.setPosition(shooterMap.stop);
+            }
+
+            //Flicker servo. Button [2]
+            if (gamepad1.b) {
+                shooterMap.frontFlick.setPosition(shooterMap.stop);
+
+            } else {
+                shooterMap.frontFlick.setPosition(shooterMap.start);
+                telemetry.addData("Front", "B");
+
             }
 
 
