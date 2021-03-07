@@ -99,12 +99,7 @@ public class New_GodCode extends LinearOpMode {
 
 
             //Shooter = bumper2 [32]
-            double shootSpeed;
-            if (gamepad1.y){ // if button one is pressed
-                shootSpeed = shooterMap.slow;
-            } else {
-                shootSpeed = shooterMap.fast;
-            }
+            double shootSpeed = 1.0;
             if (gamepad1.right_bumper) {
                 shooterMap.shooter.setPower(shootSpeed);
             } else if (gamepad1.left_bumper) {

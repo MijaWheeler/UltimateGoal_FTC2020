@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,10 +56,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="I'm Feeling Doodly ^0^", group="HII")
+@Autonomous(name= "I'm Feeling Playful :p", group= "HII"
+)
 //@Disabled
-public class Auto_PowershotLuckyLift extends LinearOpMode {
-
+public class Auto_DoubleTrouble extends LinearOpMode {
     /* Declare OpMode members. */
     //HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private final ElapsedTime     runtime = new ElapsedTime();
@@ -74,15 +73,11 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
     private DcMotor lift;
     public Servo loader;
 
-
-
-
-    //private DcMotor simp;
-
-    static final double     FORWARD_SPEED = 0.3;
-    static final double     SHOOT_SPEED    = .7;
+    static final double     FORWARD_SPEED = 0.3; //Drive speed
+    static final double     SHOOT_SPEED    = 1.0;
     static final double     PWRSHT_SPEED    = 1; //powershot
-    static final double     stop   = 0.1;
+    static final double     stop   = 0.1; //loader servo positions
+    static final double     mid    = -0.5; //loader servo positions
     static final double     start   = 1;
 
 
@@ -124,7 +119,6 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -132,40 +126,38 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
         frontLeftDrive.setPower(0);
         frontRightDrive.setPower(0);
         backLeftDrive.setPower(0);
         backRightDrive.setPower(0);
         shooter.setPower(0);
-        loader.setPosition(stop);
+        loader.setPosition(mid);
 
-        //Lift up
+        //S1: Raise Lift to shoot height
         double Lift_SPEED = 0.6;
         runtime.reset();
         lift.setPower(Lift_SPEED);
         sleep(1000);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.5))
+        while (opModeIsActive() && (runtime.seconds() < 0.7))
         {
             telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-
+        //S2: drive to shoot point
         frontLeftDrive.setPower(-FORWARD_SPEED);
         frontRightDrive.setPower(-FORWARD_SPEED);
         backLeftDrive.setPower(-FORWARD_SPEED);
         backRightDrive.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < .8)) { //5
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) { //5
             telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-
-        //Shoot. Lift stop.
+        //S3A: Lift stop. Shoot 1
         sleep(500);
         lift.setPower(0);
         frontLeftDrive.setPower(0);
@@ -173,8 +165,18 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
         backLeftDrive.setPower(0);
         backRightDrive.setPower(0);
 
-        //
         sleep(1000);
+        shooter.setPower(PWRSHT_SPEED);
+        sleep(1500);
+        loader.setPosition(start);
+        sleep(1000);
+        loader.setPosition(stop);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 4.0 )) {
+            telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        //S3B: Shoot again
         shooter.setPower(PWRSHT_SPEED);
         sleep(1500);
         loader.setPosition(start);
@@ -185,7 +187,7 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
             telemetry.update();
         }
 
-        //Forward
+        //S4: Forward to park line
         frontLeftDrive.setPower(-FORWARD_SPEED);
         frontRightDrive.setPower(-FORWARD_SPEED);
         backLeftDrive.setPower(-FORWARD_SPEED);
@@ -197,14 +199,17 @@ public class Auto_PowershotLuckyLift extends LinearOpMode {
             telemetry.update();
         }
 
-        // Step 4:  Stop and close the claw.
+
+        //S5: Stop on the line & stop running motors
         frontLeftDrive.setPower(0);
         frontRightDrive.setPower(0);
         backLeftDrive.setPower(0);
         backRightDrive.setPower(0);
         loader.setPosition(stop);
 
-
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
