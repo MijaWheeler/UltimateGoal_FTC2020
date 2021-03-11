@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -48,27 +50,83 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="God", group="New")
+@TeleOp(name="All-Father", group="New")
 ///@Disabled
-public class New_GodCode extends LinearOpMode {
+public class All_God extends LinearOpMode {
 
     // Declare OpMode members.
+    /*
     Map_Tank driveMap = new Map_Tank();
     Map_Lift liftMap = new Map_Lift();
     Map_Intake intakeMap = new Map_Intake();
     Map_Shooter shooterMap = new Map_Shooter();
 
-    private final ElapsedTime runtime = new ElapsedTime();
+     */
+
+    /* Declare OpMode members. */
+    //HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    private final ElapsedTime     runtime = new ElapsedTime();
+    private DcMotor frontLeftDrive;
+    private DcMotor frontRightDrive;
+    private DcMotor backLeftDrive;
+    private DcMotor backRightDrive;
+    private DcMotor shooter;
+    private DcMotor intake;
+    private DcMotor lift;
+
+    public Servo loader;
+    public Servo frontFlick;
+    public Servo sideFlick;
+
+
+
+    //private DcMotor simp;
+    static final double     FORWARD_SPEED = 0.3;
+    static final double     SHOOT_SPEED = .7;
+    static final double     PWRSHT_SPEED    = 1; //powershot
+    static final double     stop   = 0.1;
+    static final double     start   = 1;
 
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        driveMap.init(hardwareMap);
-        liftMap.init(hardwareMap);
-        intakeMap.init(hardwareMap);
-        shooterMap.init(hardwareMap);
+
+
+        frontLeftDrive  = hardwareMap.dcMotor.get("frontLeftDrive");
+        frontRightDrive = hardwareMap.dcMotor.get("frontRightDrive");
+        backLeftDrive   = hardwareMap.dcMotor.get("backLeftDrive");
+        backRightDrive  = hardwareMap.dcMotor.get("backRightDrive");
+        shooter         = hardwareMap.dcMotor.get("shooter");
+        intake          = hardwareMap.dcMotor.get("intake");
+        lift            = hardwareMap.dcMotor.get("hopper");
+
+        loader          = hardwareMap.get(Servo.class, "loader");
+        frontFlick      = hardwareMap.get(Servo.class, "Front Flick");
+        sideFlick       = hardwareMap.get(Servo.class, "Side Flick");
+
+
+        //Set motor direction
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);// kinda sus
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        intake.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.FORWARD);// kinda sus
+        shooter.setDirection(DcMotor.Direction.FORWARD);
+        //backRightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -88,79 +146,66 @@ public class New_GodCode extends LinearOpMode {
 
 
             //Initial Motor Speeds
-            driveMap.frontLeftDrive.setPower(fld);
-            driveMap.frontRightDrive.setPower(frd);
-            driveMap.backLeftDrive.setPower(bld);
-            driveMap.backRightDrive.setPower(brd);
+            frontLeftDrive.setPower(fld);
+            frontRightDrive.setPower(frd);
+            backLeftDrive.setPower(bld);
+            backRightDrive.setPower(brd);
 
-            intakeMap.intake.setPower(0.0);
-            shooterMap.shooter.setPower(0.0);
-            liftMap.lift.setPower(0.0);
-
+            intake.setPower(0.0);
+            shooter.setPower(0.0);
+            lift.setPower(0.0);
 
             //Shooter = bumper2 [32]
             double shootSpeed = 1.0;
             if (gamepad1.right_bumper) {
-                shooterMap.shooter.setPower(shootSpeed);
+                shooter.setPower(shootSpeed);
             } else if (gamepad1.left_bumper) {
-                shooterMap.shooter.setPower(-shootSpeed);
+                shooter.setPower(-shootSpeed);
             } else {
-                shooterMap.shooter.setPower(0.0);
+                shooter.setPower(0.0);
             }
 
             //Lift [Trigger 2]
             double hopperSpeed = 1;
             if (gamepad1.dpad_up) {
-                liftMap.lift.setPower(hopperSpeed);
-
+                lift.setPower(hopperSpeed);
             } else if (gamepad1.dpad_down) {
-                liftMap.lift.setPower(-hopperSpeed);
-
+                lift.setPower(-hopperSpeed);
             }else {
-                liftMap.lift.setPower(0.0);
+                lift.setPower(0.0);
             }
 
             //Loader servo. Button [2]
-            //Loader servo. Button [2]
             if (gamepad1.a) {
-                shooterMap.loader.setPosition(shooterMap.stop);
+                loader.setPosition(start);
             } else {
-                shooterMap.loader.setPosition(shooterMap.start);
-                telemetry.addData("Load", "A");
-
+                loader.setPosition(stop);
             }
 
             //Flicker servo. Button [2]
             if (gamepad1.x) {
-                shooterMap.sideFlick.setPosition(shooterMap.start);
-                telemetry.addData("Side", "X");
-
+                sideFlick.setPosition(stop);
             } else {
-                shooterMap.sideFlick.setPosition(shooterMap.stop);
+                sideFlick.setPosition(start);
             }
 
             //Flicker servo. Button [2]
             if (gamepad1.b) {
-                shooterMap.frontFlick.setPosition(shooterMap.stop);
+                frontFlick.setPosition(start);
 
             } else {
-                shooterMap.frontFlick.setPosition(shooterMap.start);
-                telemetry.addData("Front", "B");
-
+                frontFlick.setPosition(stop);
             }
 
 
            //Intake Controls= trigger [1]
            double intakeSpeed = 1.0;
            if (gamepad1.left_trigger >= 0.5) {
-               intakeMap.intake.setPower(intakeSpeed);
-
-           }else if
-                (gamepad1.right_trigger >= 0.5){
-                intakeMap.intake.setPower(-intakeSpeed);
-
-            }else{
-                intakeMap.intake.setPower(0.0);
+               intake.setPower(intakeSpeed);
+           } else if (gamepad1.right_trigger >= 0.5){
+                intake.setPower(-intakeSpeed);
+            } else{
+                intake.setPower(0.0);
             }
 
 
@@ -169,22 +214,22 @@ public class New_GodCode extends LinearOpMode {
             double driveSpeed = .2;
             double  driveSpeed1 = 1;
             if (gamepad1.right_bumper) { //right
-               driveMap.frontLeftDrive.setPower(-driveSpeed1);
-               driveMap.frontRightDrive.setPower(driveSpeed1);
-               driveMap.backLeftDrive.setPower(driveSpeed1);
-               driveMap.backRightDrive.setPower(-driveSpeed1);
+               frontLeftDrive.setPower(-driveSpeed1);
+               frontRightDrive.setPower(driveSpeed1);
+               backLeftDrive.setPower(driveSpeed1);
+               backRightDrive.setPower(-driveSpeed1);
            }
            else if (gamepad1.left_bumper) { //left
-               driveMap.frontLeftDrive.setPower(driveSpeed1);
-               driveMap.frontRightDrive.setPower(-driveSpeed1);
-               driveMap.backLeftDrive.setPower(-driveSpeed1);
-               driveMap.backRightDrive.setPower(driveSpeed1);
+               frontLeftDrive.setPower(driveSpeed1);
+               frontRightDrive.setPower(-driveSpeed1);
+               backLeftDrive.setPower(-driveSpeed1);
+               backRightDrive.setPower(driveSpeed1);
            }
            else {
-               driveMap.frontLeftDrive.setPower(fld);
-               driveMap.frontRightDrive.setPower(frd);
-               driveMap.backLeftDrive.setPower(bld);
-               driveMap.backRightDrive.setPower(brd);
+               frontLeftDrive.setPower(fld);
+               frontRightDrive.setPower(frd);
+               backLeftDrive.setPower(bld);
+               backRightDrive.setPower(brd);
            }
 
             */

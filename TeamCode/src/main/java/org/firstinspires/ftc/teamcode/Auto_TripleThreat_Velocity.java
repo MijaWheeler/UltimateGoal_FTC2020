@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -56,10 +58,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name= "I'm Feeling Spicy T.T", group= "HII"
+@Autonomous(name= "I'm Feeling Stellar ~0~", group= "HII"
 )
 //@Disabled
-public class Auto_TripleThreat extends LinearOpMode {
+public class Auto_TripleThreat_Velocity extends LinearOpMode {
     /* Declare OpMode members. */
     //HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private final ElapsedTime     runtime = new ElapsedTime();
@@ -69,13 +71,16 @@ public class Auto_TripleThreat extends LinearOpMode {
     private DcMotor frontRightDrive;
     private DcMotor backLeftDrive;
     private DcMotor backRightDrive;
-    private DcMotor shooter;
+    //private DcMotor shooter;
+    private DcMotorEx shooter;
     private DcMotor lift;
     public Servo loader;
 
     static final double     FORWARD_SPEED = 0.3; //Drive speed
-    static final double     SHOOT_SPEED    = 1.0;
-    static final double     PWRSHT_SPEED    = .9; //powershot
+    //static final double     SHOOT_SPEED    = 1.0;
+    double     SHOOT_VELOCITY    = 1300; //Max ticks per revoloution 103.6
+
+    //static final double     PWRSHT_SPEED    = .9; //powershot
     static final double     stop   = 0.1; //loader servo positions
     static final double     mid    = -0.5; //loader servo positions
     static final double     start   = 1;
@@ -84,23 +89,21 @@ public class Auto_TripleThreat extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         //robot.init(hardwareMap);
 
-
         frontLeftDrive  = hardwareMap.dcMotor.get("frontLeftDrive");
         frontRightDrive = hardwareMap.dcMotor.get("frontRightDrive");
         backLeftDrive   = hardwareMap.dcMotor.get("backLeftDrive");
         backRightDrive  = hardwareMap.dcMotor.get("backRightDrive");
-        shooter         = hardwareMap.dcMotor.get("shooter");
+        //shooter         = hardwareMap.dcMotor.get("shooter");
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         lift            = hardwareMap.dcMotor.get("hopper");
 
         loader  = hardwareMap.get(Servo.class, "loader");
-
 
         //Set motor direction
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -116,12 +119,22 @@ public class Auto_TripleThreat extends LinearOpMode {
         frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // shooter.setMode(DcMotor.RunMode.VelocityControl);
+
 
 
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
+       // telemetry.addData("Path0",  "Starting at %7d :%7d",
+              //  shooter.getVelocity());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -132,7 +145,7 @@ public class Auto_TripleThreat extends LinearOpMode {
         frontRightDrive.setPower(0);
         backLeftDrive.setPower(0);
         backRightDrive.setPower(0);
-        shooter.setPower(0);
+        shooter.setVelocity(0);
         loader.setPosition(mid);
 
         //S1: Raise Lift to shoot height
@@ -160,6 +173,7 @@ public class Auto_TripleThreat extends LinearOpMode {
 
 
         //S3A: Lift stop. Shoot 1
+        double v = 1150;
         sleep(500);
         lift.setPower(0);
         frontLeftDrive.setPower(0);
@@ -168,7 +182,7 @@ public class Auto_TripleThreat extends LinearOpMode {
         backRightDrive.setPower(0);
         //Shoot
         sleep(500);
-        shooter.setPower(PWRSHT_SPEED);
+        shooter.setVelocity(v);
         //One
         for (int i = 0; i <= 2; i++) {
             sleep(100); //11000
@@ -214,6 +228,7 @@ public class Auto_TripleThreat extends LinearOpMode {
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 5)) {
             telemetry.addData("Path", "Leg 1: %2.5f  Elapsed", runtime.seconds());
+            telemetry.addData("Shooter: ", "  ", shooter.getVelocity());
             telemetry.update();
         }
         /*
@@ -261,11 +276,9 @@ public class Auto_TripleThreat extends LinearOpMode {
         frontRightDrive.setPower(0);
         backLeftDrive.setPower(0);
         backRightDrive.setPower(0);
+        shooter.setVelocity(0);
         loader.setPosition(stop);
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
