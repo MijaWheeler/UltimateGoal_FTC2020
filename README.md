@@ -1,3 +1,11 @@
+##Team Notes
+Please refer to the A_CommentedBranch for the final versions of everything as it is the only file with commets.
+
+- Mija Wheeler 
+
+
+
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Ultimate Goal (2020-2021) competition season.
